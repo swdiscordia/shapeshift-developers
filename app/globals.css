@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--background: #ffffff;
+	--foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background: #0a0a0a;
+		--foreground: #ededed;
+	}
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+@theme {
+	--color-*: initial;
+	--color-secondary: #e6e6e6;
+}
+
+.wg-default {
+	display: none !important;
+}
+
+.no-translate {
+	/* Used to indicate that we want Weglot not to translate this element */
+}
