@@ -91,7 +91,7 @@ export function DesktopHeader({ className, switchLanguageAction, currentLanguage
                     currentTab && currentTab !== tab.value ? 'text-gray-500' : 'text-white'
                   )}
                 >
-                  {tab.name}
+                  {tab.value === 'developers' ? <LocalizedLink href={tab.href}>{tab.name}</LocalizedLink> : tab.name}
                 </div>
               ))}
             </nav>

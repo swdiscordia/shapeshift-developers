@@ -363,7 +363,7 @@ export const appProducts: TAppLink[] = [
 
 export const headerTabs = [
   { name: 'Products', href: '/products', value: 'products' },
-  { name: 'Developers', href: developerDocsUrl, value: 'developers' },
+  { name: 'Developers', href: '/developers', value: 'developers' },
   { name: 'Resources', href: '/resources', value: 'resources' },
   { name: 'DAO', href: '/dao', value: 'dao' },
 ]
