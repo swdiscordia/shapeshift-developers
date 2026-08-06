@@ -1,4 +1,5 @@
 import { DevelopersApiSection } from './_components/DevelopersApiSection'
+import { DevelopersCta } from './_components/DevelopersCta'
 import { DevelopersEconomicsSection } from './_components/DevelopersEconomicsSection'
 import { DevelopersFaq } from './_components/DevelopersFaq'
 import { DevelopersHero } from './_components/DevelopersHero'
@@ -22,6 +23,7 @@ export default function DevelopersPage(): ReactNode {
       <div className={'pt-[120px]'}>
         <DevelopersFaq />
       </div>
+      <DevelopersCta />
     </div>
   )
 }
