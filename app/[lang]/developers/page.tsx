@@ -1,4 +1,5 @@
 import { DevelopersApiSection } from './_components/DevelopersApiSection'
+import { DevelopersEconomicsSection } from './_components/DevelopersEconomicsSection'
 import { DevelopersHero } from './_components/DevelopersHero'
 import { DevelopersPartnerLogos } from './_components/DevelopersPartnerLogos'
 import { DevelopersWidgetSection } from './_components/DevelopersWidgetSection'
@@ -12,6 +13,7 @@ export default function DevelopersPage(): ReactNode {
       <DevelopersPartnerLogos />
       <DevelopersWidgetSection />
       <DevelopersApiSection />
+      <DevelopersEconomicsSection />
     </div>
   )
 }
