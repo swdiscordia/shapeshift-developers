@@ -7,13 +7,13 @@ export const DEVELOPERS_DICT = {
   },
   page: {
     hero: {
-      eyebrow: 'For dApps, chains, and wallets',
+      eyebrow: 'ShapeShift Widget + API',
       titlePrefix: 'Add ',
       titleHighlight: 'multichain swaps',
-      titleSuffix: ' to your project',
+      titleSuffix: ' to your product',
       description:
-        'Embed the ShapeShift widget or build on the swap API. 48+ chains, 30,000+ assets, and a revenue share on every swap your users make.',
-      ctaWidget: 'Get the widget',
+        'Launch fast with our ready-to-embed Widget or build a fully custom experience with the API. One integration, 48+ chains, non-custodial execution, and partner revenue on every swap.',
+      ctaWidget: 'Explore the Widget',
       ctaApi: 'Explore the API',
     },
     partnerLogos: {
@@ -21,9 +21,9 @@ export const DEVELOPERS_DICT = {
     },
     widget: {
       eyebrow: 'The widget',
-      title: 'One iframe, every chain',
+      title: 'A complete swap experience, ready to embed',
       description:
-        'Drop the swap widget into your site and your users can trade across chains without leaving it. You keep the session, the brand, and a cut of the fee.',
+        'Configure the ShapeShift Widget to match your product, choose the default assets, and ship multichain swaps without building the interface or routing logic.',
       features: [
         {
           tag: '48+ chains',
@@ -55,7 +55,7 @@ export const DEVELOPERS_DICT = {
           title: 'Configure in the sandbox',
           description: 'Theme, default assets, affiliate code. The sandbox generates the embed.',
         },
-        { number: '03', title: 'Paste the iframe', description: 'Swaps run and fees settle to your address.' },
+        { number: '03', title: 'Add the embed', description: 'Swaps run and fees settle to your address.' },
       ],
       cardLabel: 'Shipping it',
       ctaButton: 'Open the widget sandbox',
@@ -88,25 +88,22 @@ export const DEVELOPERS_DICT = {
       eyebrow: 'Economics',
       title: 'How the revenue share works',
       description:
-        'The partner dashboard is self-serve and already live. Connect, get an affiliate code, set your rate, and watch swaps come through.',
+        'One partner code follows every swap from your product to on-chain settlement. No invoice, no payout schedule.',
       steps: [
         {
           number: '01',
-          title: 'Connect and get your code',
-          description:
-            'The partner dashboard is self-serve. Connect a wallet, get your affiliate code, pass it to the widget or API. Swaps start attributing to you from the first trade.',
+          title: 'Add your partner code',
+          description: 'Create it in the partner portal, then add it once to the Widget or API.',
         },
         {
           number: '02',
-          title: 'Set your take rate',
-          description:
-            'Anywhere from 0 to 100 bps, changeable at any time in the dashboard. The fee applies to the swap amount and is added on top of the protocol fee.',
+          title: 'ShapeShift routes the swap',
+          description: 'Your user gets the best available route while the trade stays attributed to you.',
         },
         {
           number: '03',
-          title: 'Watch it settle on-chain',
-          description:
-            'Full swap history in real time. Fees settle to your address as part of each transaction, with no invoicing and no payout schedule.',
+          title: 'Your fee settles on-chain',
+          description: 'Choose 0–100 bps. Your share lands directly in your wallet with every swap.',
         },
       ],
       banner: { label: 'See it before you integrate.', ctaButton: 'Partner portal' },
