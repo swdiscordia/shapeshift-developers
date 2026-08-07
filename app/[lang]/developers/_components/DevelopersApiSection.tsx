@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/app/[lang]/_components/Button'
 import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
@@ -87,12 +88,76 @@ const codePanels = [
   },
 ]
 
+function TypedCodePanel({ activeTab }: { activeTab: number }): ReactNode {
+  const panelRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(panelRef, { amount: 0.25 })
+  const shouldReduceMotion = useReducedMotion()
+  const source = codePanels[activeTab].lines.join('\n')
+  const [visibleCharacters, setVisibleCharacters] = useState(0)
+
+  useEffect(() => {
+    if (!isInView) {
+      setVisibleCharacters(0)
+      return undefined
+    }
+    if (shouldReduceMotion) {
+      setVisibleCharacters(source.length)
+      return undefined
+    }
+
+    setVisibleCharacters(0)
+    const interval = window.setInterval(() => {
+      setVisibleCharacters((value) => {
+        if (value >= source.length) {
+          window.clearInterval(interval)
+          return value
+        }
+        return Math.min(value + 3, source.length)
+      })
+    }, 18)
+
+    return () => window.clearInterval(interval)
+  }, [activeTab, isInView, shouldReduceMotion, source.length])
+
+  return (
+    <div ref={panelRef} className={'sticky top-[120px] overflow-hidden rounded-2xl border border-stroke bg-[#0d1117]'}>
+      <div className={'flex items-center gap-3.5 border-b border-stroke px-5 py-3.5'}>
+        <div className={'flex gap-1.5'}>
+          <span className={'size-2.5 rounded-full bg-stroke'} />
+          <span className={'size-2.5 rounded-full bg-stroke'} />
+          <span className={'size-2.5 rounded-full bg-stroke'} />
+        </div>
+        <span className={'font-mono text-xs text-gray-500'}>{codePanels[activeTab].label}</span>
+        <span className={'ml-auto flex items-center gap-2 font-mono text-[10px] text-[#70E1B1]'}>
+          <span className={'size-1.5 rounded-full bg-[#70E1B1]'} />
+          {'LIVE REQUEST'}
+        </span>
+      </div>
+      <pre
+        className={
+          'min-h-[430px] overflow-x-auto whitespace-pre p-7 font-mono text-[12.5px] leading-[1.75] text-[#c9d1d9]'
+        }
+      >
+        {source.slice(0, visibleCharacters)}
+        {visibleCharacters < source.length ? (
+          <motion.span
+            aria-hidden={'true'}
+            animate={{ opacity: [1, 0, 1] }}
+            transition={{ duration: 0.8, repeat: Infinity }}
+            className={'ml-0.5 inline-block h-[1.1em] w-[7px] translate-y-[2px] bg-[#70E1B1]'}
+          />
+        ) : null}
+      </pre>
+    </div>
+  )
+}
+
 export function DevelopersApiSection(): ReactNode {
   const { api } = DEVELOPERS_DICT.page
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <section id={'api'} className={'container pt-[120px]'}>
+    <section id={'api'} className={'container pt-20 lg:pt-24'}>
       <div className={'mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-blue'}>{api.eyebrow}</div>
       <h2 className={'mb-4 text-[44px] font-bold leading-tight tracking-[-0.02em]'}>{api.title}</h2>
       <p className={'mb-14 max-w-[640px] text-lg leading-relaxed text-secondary'}>{api.description}</p>
@@ -136,23 +201,17 @@ export function DevelopersApiSection(): ReactNode {
             </div>
           ))}
           <div className={'border-t border-stroke pt-7'}>
-            <Button href={'https://api.shapeshift.com/docs'} variant={'blue'} title={api.ctaButton} hasArrow />
+            <Button
+              href={'https://api.shapeshift.com/docs'}
+              variant={'white'}
+              title={'Open the API reference'}
+              hasArrow
+              className={'w-full sm:w-fit'}
+            />
           </div>
         </div>
 
-        <div className={'sticky top-[120px] overflow-hidden rounded-2xl border border-stroke bg-[#0d1117]'}>
-          <div className={'flex items-center gap-3.5 border-b border-stroke px-5 py-3.5'}>
-            <div className={'flex gap-1.5'}>
-              <span className={'size-2.5 rounded-full bg-stroke'} />
-              <span className={'size-2.5 rounded-full bg-stroke'} />
-              <span className={'size-2.5 rounded-full bg-stroke'} />
-            </div>
-            <span className={'font-mono text-xs text-gray-500'}>{codePanels[activeTab].label}</span>
-          </div>
-          <pre className={'overflow-x-auto whitespace-pre p-7 font-mono text-[12.5px] leading-[1.75] text-[#c9d1d9]'}>
-            {codePanels[activeTab].lines.join('\n')}
-          </pre>
-        </div>
+        <TypedCodePanel activeTab={activeTab} />
       </div>
     </section>
   )

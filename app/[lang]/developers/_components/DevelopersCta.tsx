@@ -18,7 +18,13 @@ export function DevelopersCta(): ReactNode {
           <h2 className={'mb-4 text-5xl font-bold leading-tight tracking-[-0.02em]'}>{cta.title}</h2>
           <p className={'mb-10 text-lg text-white'}>{cta.description}</p>
           <div className={'flex flex-wrap items-center justify-center gap-3.5'}>
-            <Button href={'https://widget.shapeshift.com/'} variant={'blue'} title={cta.ctaPrimary} hasArrow />
+            <Button
+              href={'https://widget.shapeshift.com/'}
+              variant={'blue'}
+              title={cta.ctaPrimary}
+              hasArrow
+              className={'relative !justify-center [&_svg]:absolute [&_svg]:right-5'}
+            />
             <Button href={'https://discord.gg/shapeshift'} variant={'white'} title={cta.ctaSecondary} />
           </div>
         </div>

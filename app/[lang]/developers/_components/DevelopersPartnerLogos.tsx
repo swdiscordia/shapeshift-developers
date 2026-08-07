@@ -1,3 +1,7 @@
+'use client'
+
+import { motion } from 'framer-motion'
+
 import { carouselLogos } from '@/app/[lang]/_utils/constants'
 import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
 
@@ -27,28 +31,52 @@ const textLogos = [
   'Arbitrum',
 ]
 
+function ProtocolRow(): ReactNode {
+  return (
+    <div className={'flex shrink-0 items-center gap-14 pr-14'}>
+      {imageLogos.map(({ key, alt }) => {
+        const Logo = carouselLogos[key].Logo
+        return (
+          <div
+            key={key}
+            className={'flex h-10 shrink-0 items-center brightness-0 invert transition-opacity hover:opacity-75'}
+            aria-label={alt}
+          >
+            <Logo />
+          </div>
+        )
+      })}
+      {textLogos.map((name) => (
+        <span key={name} className={'shrink-0 whitespace-nowrap text-lg font-semibold tracking-[-0.01em] text-white'}>
+          {name}
+        </span>
+      ))}
+    </div>
+  )
+}
+
 export function DevelopersPartnerLogos(): ReactNode {
   return (
-    <section className={'border-y border-stroke px-4 py-11'}>
-      <div className={'container flex flex-wrap items-center justify-between gap-8'}>
-        <span className={'whitespace-nowrap text-xs font-semibold uppercase tracking-[0.08em] text-gray-600'}>
+    <section className={'mt-20 overflow-hidden border-y border-white/[0.07] py-8 lg:mt-24'}>
+      <div className={'container mb-6 flex items-center gap-4'}>
+        <span className={'size-2 rounded-full bg-blue shadow-[0_0_12px_#386FF9]'} />
+        <span className={'text-[11px] font-semibold uppercase tracking-[0.13em] text-white'}>
           {DEVELOPERS_DICT.page.partnerLogos.label}
         </span>
-        <div className={'flex flex-wrap items-center gap-x-14 gap-y-7'}>
-          {imageLogos.map(({ key, alt }) => {
-            const Logo = carouselLogos[key].Logo
-            return (
-              <div key={key} className={'opacity-75 grayscale'} aria-label={alt}>
-                <Logo />
-              </div>
-            )
-          })}
-          {textLogos.map((name) => (
-            <span key={name} className={'whitespace-nowrap text-lg font-semibold text-gray-400 opacity-75'}>
-              {name}
-            </span>
-          ))}
-        </div>
+      </div>
+      <div
+        className={
+          'relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]'
+        }
+      >
+        <motion.div
+          className={'flex w-max'}
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ duration: 52, repeat: Infinity, ease: 'linear' }}
+        >
+          <ProtocolRow />
+          <ProtocolRow />
+        </motion.div>
       </div>
     </section>
   )
