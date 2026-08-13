@@ -18,19 +18,6 @@ const imageLogos = [
   { key: 'jupiter', alt: 'Jupiter' },
 ] as const
 
-const textLogos = [
-  'Portals',
-  'Bebop',
-  'NEAR Intents',
-  'Cetus',
-  'SUN.io',
-  'AVNU',
-  'STON.fi',
-  'Across',
-  'deBridge',
-  'Arbitrum',
-]
-
 function ProtocolRow(): ReactNode {
   return (
     <div className={'flex shrink-0 items-center gap-14 pr-14'}>
@@ -46,11 +33,13 @@ function ProtocolRow(): ReactNode {
           </div>
         )
       })}
-      {textLogos.map((name) => (
-        <span key={name} className={'shrink-0 whitespace-nowrap text-lg font-semibold tracking-[-0.01em] text-white'}>
-          {name}
-        </span>
-      ))}
+      <span
+        className={
+          'shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-gray-400'
+        }
+      >
+        {'+10 routing integrations'}
+      </span>
     </div>
   )
 }

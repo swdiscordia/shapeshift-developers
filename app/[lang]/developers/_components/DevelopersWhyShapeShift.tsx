@@ -44,6 +44,21 @@ function RouterIllustration(): ReactNode {
               transition={index === 1 ? { duration: 2.4, repeat: Infinity, ease: 'linear' } : undefined}
             />
           ))}
+          <circle r={'5'} fill={'#70E1B1'} className={'drop-shadow-[0_0_8px_#70E1B1]'}>
+            <animateMotion
+              dur={'4.2s'}
+              repeatCount={'indefinite'}
+              path={'M70 70 H260 Q320 70 370 22 H505 Q565 22 610 70 H730'}
+            />
+          </circle>
+          <circle r={'5'} fill={'#70E1B1'} className={'drop-shadow-[0_0_8px_#70E1B1]'}>
+            <animateMotion
+              begin={'2.1s'}
+              dur={'4.2s'}
+              repeatCount={'indefinite'}
+              path={'M70 70 H260 Q320 70 370 118 H505 Q565 118 610 70 H730'}
+            />
+          </circle>
         </svg>
       </div>
 
@@ -94,12 +109,6 @@ function RouterIllustration(): ReactNode {
         </div>
         <div className={'mt-1 text-xs font-semibold'}>{'Best route'}</div>
       </div>
-
-      <motion.div
-        animate={{ left: ['14%', '84%'], opacity: [0, 1, 1, 0] }}
-        transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
-        className={'absolute top-[calc(50%-3px)] z-20 size-1.5 rounded-full bg-[#70E1B1] shadow-[0_0_14px_#70E1B1]'}
-      />
 
       <div
         className={'absolute bottom-5 left-1/2 -translate-x-1/2 text-[9px] uppercase tracking-[0.12em] text-gray-600'}

@@ -1,20 +1,29 @@
+'use client'
+
+import { motion } from 'framer-motion'
+
 import { Button } from '@/app/[lang]/_components/Button'
 
 import type { ReactNode } from 'react'
 
 function WalletVisual(): ReactNode {
   return (
-    <div className={'flex h-28 items-center justify-center'}>
-      <div className={'relative h-20 w-32 rounded-[22px] border border-blue/25 bg-blue/10'}>
-        <div className={'absolute left-5 top-5 h-2 w-14 rounded-full bg-white/15'} />
-        <div className={'absolute bottom-4 left-5 h-2 w-8 rounded-full bg-blue/60'} />
-        <div
-          className={
-            'absolute -right-4 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-2xl bg-blue shadow-xl'
-          }
-        >
-          {'↔'}
+    <div className={'relative flex h-36 items-center justify-center overflow-hidden'}>
+      <div className={'absolute inset-x-8 top-1/2 h-px bg-gradient-to-r from-transparent via-blue/50 to-transparent'} />
+      <div className={'relative w-[210px] rounded-[22px] border border-white/10 bg-[#0D1220] p-3 shadow-2xl'}>
+        <div className={'mb-3 flex items-center justify-between'}>
+          <span className={'text-[9px] font-semibold'}>{'Your wallet'}</span>
+          <span className={'size-2 rounded-full bg-[#70E1B1]'} />
         </div>
+        <div className={'flex items-center justify-between rounded-xl bg-blue/10 px-3 py-2'}>
+          <span className={'text-[9px] text-gray-500'}>{'Swap'}</span>
+          <span className={'text-[10px] font-semibold'}>{'ETH → BTC'}</span>
+        </div>
+        <motion.div
+          animate={{ x: [0, 128, 0] }}
+          transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
+          className={'mt-3 size-2 rounded-full bg-blue shadow-[0_0_12px_#386FF9]'}
+        />
       </div>
     </div>
   )
@@ -22,32 +31,81 @@ function WalletVisual(): ReactNode {
 
 function ChainVisual(): ReactNode {
   return (
-    <div className={'relative flex h-28 items-center justify-center gap-7'}>
-      {['₿', 'Ξ', '◎'].map((symbol, index) => (
-        <div
+    <div className={'relative flex h-36 items-center justify-center'}>
+      <svg aria-hidden={'true'} viewBox={'0 0 300 120'} className={'absolute inset-0 size-full'}>
+        {['M52 60 H118 L155 22 H248', 'M52 60 H248', 'M52 60 H118 L155 98 H248'].map((path) => (
+          <path key={path} d={path} fill={'none'} stroke={'rgba(56,111,249,.3)'} strokeWidth={'2'} />
+        ))}
+      </svg>
+      <div
+        className={'absolute left-[10%] flex size-11 items-center justify-center rounded-2xl bg-blue text-sm font-bold'}
+      >
+        {'API'}
+      </div>
+      {[
+        ['₿', 'top-3'],
+        ['Ξ', 'top-1/2 -translate-y-1/2'],
+        ['◎', 'bottom-3'],
+      ].map(([symbol, position], index) => (
+        <motion.div
           key={symbol}
-          className={`flex size-14 items-center justify-center rounded-2xl border border-blue/20 text-xl shadow-xl ${
-            index === 1 ? 'bg-blue/20' : 'bg-blue/10'
-          }`}
+          animate={{ scale: [1, 1.08, 1] }}
+          transition={{ duration: 2.8, delay: index * 0.45, repeat: Infinity }}
+          className={`absolute right-[10%] flex size-11 items-center justify-center rounded-2xl border border-blue/25 bg-[#111A2B] text-lg shadow-xl ${position}`}
         >
           {symbol}
-        </div>
+        </motion.div>
       ))}
-      <div className={'absolute left-[31%] top-1/2 h-px w-[38%] bg-gradient-to-r from-blue via-[#70E1B1] to-blue'} />
+      <motion.span
+        animate={{ left: ['26%', '76%'], opacity: [0, 1, 1, 0] }}
+        transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+        className={'absolute top-[calc(50%-3px)] size-1.5 rounded-full bg-[#70E1B1] shadow-[0_0_10px_#70E1B1]'}
+      />
     </div>
   )
 }
 
 function RevenueVisual(): ReactNode {
   return (
-    <div className={'flex h-28 items-end justify-center gap-2 pb-2'}>
-      {[38, 54, 44, 72, 92].map((height, index) => (
-        <div
-          key={height}
-          style={{ height }}
-          className={`w-7 rounded-t-lg ${index === 4 ? 'bg-blue shadow-[0_0_24px_rgba(56,111,249,.35)]' : 'bg-blue/20'}`}
-        />
+    <div className={'relative flex h-36 items-center justify-between px-8'}>
+      {[
+        ['01', 'USER'],
+        ['02', 'SWAP'],
+        ['03', 'WALLET'],
+      ].map(([number, label], index) => (
+        <div key={number} className={'relative z-10 text-center'}>
+          <motion.div
+            animate={
+              index === 2
+                ? {
+                    boxShadow: [
+                      '0 0 0 rgba(112,225,177,0)',
+                      '0 0 24px rgba(112,225,177,.35)',
+                      '0 0 0 rgba(112,225,177,0)',
+                    ],
+                  }
+                : undefined
+            }
+            transition={{ duration: 2.6, repeat: Infinity }}
+            className={
+              index === 2
+                ? 'mx-auto flex size-12 items-center justify-center rounded-2xl border border-[#70E1B1]/30 bg-[#10221C] font-mono text-xs text-[#70E1B1]'
+                : 'mx-auto flex size-12 items-center justify-center rounded-2xl border border-blue/20 bg-blue/10 font-mono text-xs text-[#8FACFF]'
+            }
+          >
+            {number}
+          </motion.div>
+          <div className={'mt-2 text-[8px] tracking-[0.12em] text-gray-600'}>{label}</div>
+        </div>
       ))}
+      <div
+        className={'absolute left-[20%] right-[20%] top-[56px] h-px bg-gradient-to-r from-blue via-blue to-[#70E1B1]'}
+      />
+      <motion.div
+        animate={{ left: ['20%', '78%'], opacity: [0, 1, 1, 0] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        className={'absolute top-[53px] size-2 rounded-full bg-[#70E1B1] shadow-[0_0_12px_#70E1B1]'}
+      />
     </div>
   )
 }

@@ -72,11 +72,24 @@ function InteractiveSwapper(): ReactNode {
   return (
     <div
       className={
-        'relative z-20 w-full max-w-[480px] overflow-hidden rounded-[28px] border border-white/[0.07] bg-[#0A0A14] shadow-[0_35px_100px_rgba(0,0,0,.58),0_0_80px_rgba(56,111,249,.12)]'
+        'relative z-20 w-full max-w-[480px] overflow-hidden rounded-[28px] border border-blue/30 bg-[#0A0A14] shadow-[0_35px_100px_rgba(0,0,0,.62),0_0_90px_rgba(56,111,249,.3)]'
       }
     >
+      <motion.div
+        animate={{ x: ['-110%', '420%'] }}
+        transition={{ duration: 4.5, repeat: Infinity, repeatDelay: 1.5, ease: 'easeInOut' }}
+        className={
+          'pointer-events-none absolute left-0 top-0 z-30 h-px w-1/4 bg-gradient-to-r from-transparent via-[#70E1B1] to-transparent'
+        }
+      />
       <div className={'flex items-center justify-between border-b border-white/[0.08] px-5 py-5 sm:px-6'}>
-        <div className={'text-lg font-semibold'}>{'Swap'}</div>
+        <div>
+          <div className={'text-lg font-semibold'}>{'ShapeShift Widget'}</div>
+          <div className={'mt-0.5 flex items-center gap-1.5 text-[10px] text-gray-500'}>
+            <span className={'size-1.5 rounded-full bg-[#70E1B1] shadow-[0_0_7px_#70E1B1]'} />
+            {'Live product demo'}
+          </div>
+        </div>
         <div className={'flex items-center gap-2'}>
           <button
             type={'button'}
@@ -183,12 +196,12 @@ export function DevelopersHero(): ReactNode {
         className={'pointer-events-none absolute right-[8%] top-24 size-[600px] rounded-full bg-blue/14 blur-[150px]'}
       />
 
-      <div className={'container relative grid items-start gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12'}>
+      <div className={'container relative grid min-w-0 items-center gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12'}>
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className={'lg:pt-8'}
+          className={'min-w-0 lg:pt-4'}
         >
           <div
             className={
@@ -196,31 +209,42 @@ export function DevelopersHero(): ReactNode {
             }
           >
             <span className={'size-2 rounded-full bg-[#70E1B1] shadow-[0_0_12px_#70E1B1]'} />
-            {'ShapeShift Widget + API'}
+            {'The ShapeShift Widget'}
           </div>
-          <h1 className={'mb-7 text-[50px] font-bold leading-[.98] tracking-[-0.05em] sm:text-[64px] lg:text-[76px]'}>
-            {'Multichain swaps, '}
+          <h1
+            className={
+              'mb-6 max-w-full text-[46px] font-bold leading-[.98] tracking-[-0.05em] sm:text-[60px] lg:text-[68px]'
+            }
+          >
+            {'Add multichain swaps '}
             <span className={'bg-gradient-to-r from-[#BFD0FF] to-blue bg-clip-text text-transparent'}>
-              {'ready to ship.'}
+              {'in minutes.'}
             </span>
           </h1>
-          <p className={'mb-9 max-w-[620px] text-lg leading-relaxed text-secondary sm:text-xl'}>
+          <p className={'mb-7 max-w-[600px] text-lg leading-relaxed text-secondary sm:text-xl'}>
             {
-              'Embed the Widget in minutes or build your own experience with the API. ShapeShift handles routing and maintenance—you own the experience and the revenue.'
+              'Give your users a complete, customizable swap experience across 48+ chains—without building or maintaining the routing infrastructure.'
             }
           </p>
           <div className={'mb-8 flex flex-col gap-3 sm:flex-row'}>
-            <Button href={'#widget'} variant={'blue'} title={'Explore the Widget'} hasArrow />
-            <Button href={'#api'} variant={'white'} title={'Explore the API'} />
+            <Button href={'https://widget.shapeshift.com/'} variant={'blue'} title={'Try the Widget'} hasArrow />
+            <Button href={'https://discord.gg/shapeshift'} variant={'white'} title={'Talk to partnerships'} />
           </div>
           <div className={'flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-400'}>
-            {['48+ chains', 'Non-custodial', 'Revenue share'].map((benefit) => (
+            {['48+ chains', '18 routing protocols', 'Partner revenue'].map((benefit) => (
               <span key={benefit} className={'flex items-center gap-2'}>
                 <span className={'size-1.5 rounded-full bg-blue'} />
                 {benefit}
               </span>
             ))}
           </div>
+          <a
+            href={'#api'}
+            className={'mt-6 inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-white'}
+          >
+            {'Need a custom integration? Explore the API'}
+            <span aria-hidden={'true'}>{'→'}</span>
+          </a>
         </motion.div>
 
         <motion.div
@@ -228,31 +252,69 @@ export function DevelopersHero(): ReactNode {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, duration: 0.6 }}
           className={
-            'relative mx-auto flex min-h-[720px] w-full max-w-[720px] items-center justify-center px-2 py-20 lg:min-h-[610px] lg:px-[136px] lg:py-0'
+            'relative mx-auto flex min-h-[650px] min-w-0 w-full max-w-[720px] items-center justify-center px-2 py-20 lg:min-h-[570px] lg:px-[136px] lg:py-0'
           }
         >
-          <div className={'pointer-events-none absolute inset-[10%] rounded-full bg-blue/16 blur-[80px]'} />
+          <div
+            className={
+              'pointer-events-none absolute -inset-x-[36%] inset-y-1 bg-[radial-gradient(ellipse_at_50%_40%,rgba(56,97,251,.38),rgba(13,17,29,.7)_52%,transparent_84%)]'
+            }
+          />
+          <div
+            className={'pointer-events-none absolute -inset-x-[36%] inset-y-1 opacity-30'}
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(91,123,255,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(91,123,255,.15) 1px, transparent 1px)',
+              backgroundSize: '40px 40px',
+              maskImage: 'linear-gradient(to bottom, black, transparent 86%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black, transparent 86%)',
+            }}
+          />
+          <div className={'pointer-events-none absolute inset-[10%] rounded-full bg-blue/25 blur-[90px]'} />
+
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+            className={'pointer-events-none absolute inset-[7%] rounded-full border border-dashed border-blue/20'}
+          />
+
+          <motion.div
+            animate={{ rotate: -360 }}
+            transition={{ duration: 16, repeat: Infinity, ease: 'linear' }}
+            className={'pointer-events-none absolute inset-[17%] rounded-full border border-blue/25'}
+          >
+            <span
+              className={'absolute -right-1 top-1/2 size-2.5 rounded-full bg-[#70E1B1] shadow-[0_0_14px_#70E1B1]'}
+            />
+          </motion.div>
           <InteractiveSwapper />
 
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
             className={
-              'absolute left-2 top-3 z-30 w-[142px] -rotate-2 rounded-2xl border border-white/10 bg-[#111827] p-3.5 shadow-2xl sm:left-8 lg:left-0 lg:top-[14%] lg:w-[150px] lg:p-4'
+              'absolute left-2 top-4 z-30 w-[142px] -rotate-2 rounded-2xl border border-blue/30 bg-[#111827]/95 p-3 shadow-[0_20px_50px_rgba(0,0,0,.45),0_0_30px_rgba(56,97,251,.18)] backdrop-blur-xl sm:left-8 lg:-left-2 lg:top-[12%] lg:w-[160px] lg:p-4'
             }
           >
-            <div className={'mb-2 font-mono text-[11px] text-gray-400'}>{'POST /swap/quote'}</div>
-            <div className={'font-mono text-xs font-semibold text-[#70E1B1]'}>{'200 · route ready'}</div>
+            <div className={'mb-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-gray-500 lg:text-[10px]'}>
+              {'Smart routing'}
+            </div>
+            <div className={'text-[11px] font-semibold text-white lg:text-xs'}>{'18 routes compared'}</div>
+            <div className={'mt-2 flex items-center gap-1.5 text-[9px] text-[#70E1B1] lg:text-[10px]'}>
+              <span className={'size-1.5 rounded-full bg-[#70E1B1]'} />
+              {'Best price selected'}
+            </div>
           </motion.div>
+
           <motion.div
-            animate={{ y: [0, 9, 0] }}
-            transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
+            animate={{ y: [0, 7, 0] }}
+            transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut' }}
             className={
-              'absolute bottom-3 right-2 z-30 w-[142px] rotate-2 rounded-2xl border border-white/10 bg-[#111827] p-3.5 shadow-2xl sm:right-8 lg:bottom-[14%] lg:right-0 lg:w-[150px] lg:p-4'
+              'absolute bottom-4 right-2 z-30 rounded-2xl border border-[#70E1B1]/25 bg-[#101A18]/95 px-3.5 py-3 shadow-[0_20px_50px_rgba(0,0,0,.4),0_0_30px_rgba(112,225,177,.1)] backdrop-blur-xl sm:right-8 lg:bottom-[10%] lg:-right-2 lg:px-4'
             }
           >
-            <div className={'mb-1 text-[11px] uppercase tracking-[0.12em] text-gray-400'}>{'Partner earnings'}</div>
-            <div className={'text-xl font-semibold text-[#A9C0FF]'}>{'+ 25 bps'}</div>
+            <div className={'text-[9px] uppercase tracking-[0.12em] text-gray-500 lg:text-[10px]'}>{'Integration'}</div>
+            <div className={'mt-1 text-[11px] font-semibold text-white lg:text-xs'}>{'Ready to embed'}</div>
           </motion.div>
         </motion.div>
       </div>
