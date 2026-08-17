@@ -20,7 +20,7 @@ export function DevelopersStats(): ReactNode {
         >
           <div
             className={
-              'bg-gradient-to-b from-white to-[#8FAEFF] bg-clip-text text-3xl font-semibold leading-tight text-transparent lg:text-[46px] lg:leading-[54px]'
+              'bg-gradient-to-b from-white to-blueLight bg-clip-text text-3xl font-semibold leading-tight text-transparent lg:text-[46px] lg:leading-[54px]'
             }
           >
             {stat.value}

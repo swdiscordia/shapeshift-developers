@@ -6,6 +6,8 @@ import { Button } from '@/app/[lang]/_components/Button'
 import { developerDocsUrl } from '@/app/[lang]/_utils/constants'
 import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
 
+import { SectionEyebrow } from './SectionEyebrow'
+
 import type { ReactNode } from 'react'
 
 const milestones = [
@@ -50,7 +52,7 @@ function MilestoneMarker({ index }: { index: number }): ReactNode {
       </div>
       <span
         className={
-          'absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-[#70E1B1] font-mono text-[9px] font-bold text-[#07110C]'
+          'absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-mint font-mono text-[9px] font-bold text-[#07110C]'
         }
       >
         {milestones[index].number}
@@ -64,7 +66,7 @@ function MilestoneCopy({ index }: { index: number }): ReactNode {
 
   return (
     <div className={'w-[210px] max-w-full text-center'}>
-      <div className={'mb-2 text-[9px] font-semibold tracking-[0.14em] text-[#8FACFF]'}>{milestone.label}</div>
+      <div className={'mb-2 text-[9px] font-semibold tracking-[0.14em] text-blueLight'}>{milestone.label}</div>
       <h3 className={'mb-2 text-lg font-semibold tracking-[-0.025em]'}>{milestone.title}</h3>
       <p className={'text-xs leading-relaxed text-gray-400'}>{milestone.description}</p>
     </div>
@@ -77,9 +79,7 @@ export function DevelopersEconomicsSection(): ReactNode {
   return (
     <section id={'economics'} className={'container pt-20 lg:pt-24'}>
       <div className={'mx-auto mb-10 max-w-[780px] text-center lg:mb-12'}>
-        <div className={'mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#8FACFF]'}>
-          {economics.eyebrow}
-        </div>
+        <SectionEyebrow>{economics.eyebrow}</SectionEyebrow>
         <h2 className={'mb-5 text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>
           {economics.title}
         </h2>
@@ -98,8 +98,8 @@ export function DevelopersEconomicsSection(): ReactNode {
           }
         />
         <div className={'relative flex justify-center border-b border-white/[0.07] pb-5'}>
-          <span className={'flex items-center gap-2 text-[10px] uppercase tracking-[0.12em] text-[#70E1B1]'}>
-            <span className={'size-1.5 rounded-full bg-[#70E1B1] shadow-[0_0_10px_#70E1B1]'} />
+          <span className={'flex items-center gap-2 text-[10px] uppercase tracking-[0.12em] text-mint'}>
+            <span className={'size-1.5 rounded-full bg-mint shadow-[0_0_10px_#70E1B1]'} />
             {'Automatic · transparent · on-chain'}
           </span>
         </div>
@@ -210,7 +210,7 @@ export function DevelopersEconomicsSection(): ReactNode {
           </div>
           <div className={'shrink-0 text-left sm:text-right'}>
             <div className={'text-[10px] uppercase tracking-[0.12em] text-gray-500'}>{'Partner fee'}</div>
-            <div className={'mt-1 text-2xl font-semibold text-[#70E1B1]'}>{'0–100 bps'}</div>
+            <div className={'mt-1 text-2xl font-semibold text-mint'}>{'0–100 bps'}</div>
           </div>
         </div>
       </div>

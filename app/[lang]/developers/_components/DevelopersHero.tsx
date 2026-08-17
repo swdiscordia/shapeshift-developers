@@ -1,10 +1,12 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
 import { useMemo, useState } from 'react'
 
 import { Button } from '@/app/[lang]/_components/Button'
+
+import { SectionEyebrow } from './SectionEyebrow'
 
 import type { ReactNode } from 'react'
 
@@ -44,6 +46,7 @@ function AssetSelector({ asset, onClick }: { asset: TAsset; onClick: () => void 
 }
 
 function InteractiveSwapper(): ReactNode {
+  const shouldReduceMotion = useReducedMotion()
   const [sellAsset, setSellAsset] = useState<TAsset>('ETH')
   const [buyAsset, setBuyAsset] = useState<TAsset>('USDC')
   const [amount, setAmount] = useState<string>('1.50')
@@ -76,17 +79,19 @@ function InteractiveSwapper(): ReactNode {
       }
     >
       <motion.div
-        animate={{ x: ['-110%', '420%'] }}
-        transition={{ duration: 4.5, repeat: Infinity, repeatDelay: 1.5, ease: 'easeInOut' }}
+        animate={shouldReduceMotion ? undefined : { x: ['-110%', '420%'] }}
+        transition={
+          shouldReduceMotion ? undefined : { duration: 4.5, repeat: Infinity, repeatDelay: 1.5, ease: 'easeInOut' }
+        }
         className={
-          'pointer-events-none absolute left-0 top-0 z-30 h-px w-1/4 bg-gradient-to-r from-transparent via-[#70E1B1] to-transparent'
+          'pointer-events-none absolute left-0 top-0 z-30 h-px w-1/4 bg-gradient-to-r from-transparent via-mint to-transparent'
         }
       />
       <div className={'flex items-center justify-between border-b border-white/[0.08] px-5 py-5 sm:px-6'}>
         <div>
           <div className={'text-lg font-semibold'}>{'ShapeShift Widget'}</div>
           <div className={'mt-0.5 flex items-center gap-1.5 text-[10px] text-gray-500'}>
-            <span className={'size-1.5 rounded-full bg-[#70E1B1] shadow-[0_0_7px_#70E1B1]'} />
+            <span className={'size-1.5 rounded-full bg-mint shadow-[0_0_7px_#70E1B1]'} />
             {'Live product demo'}
           </div>
         </div>
@@ -103,7 +108,7 @@ function InteractiveSwapper(): ReactNode {
             aria-label={'Widget settings'}
             onClick={() => setIsShowingSettings((value) => !value)}
             className={
-              'flex size-10 items-center justify-center rounded-xl text-xl text-gray-400 hover:bg-white/5 hover:text-white'
+              'flex size-11 items-center justify-center rounded-xl text-xl text-gray-400 hover:bg-white/5 hover:text-white'
             }
           >
             {'⚙'}
@@ -120,7 +125,7 @@ function InteractiveSwapper(): ReactNode {
           }
         >
           <span className={'text-gray-400'}>{'Slippage tolerance'}</span>
-          <span className={'rounded-lg bg-blue/15 px-3 py-1.5 font-semibold text-[#9CB5FF]'}>{'Auto · 0.5%'}</span>
+          <span className={'rounded-lg bg-blue/15 px-3 py-1.5 font-semibold text-blueLight'}>{'Auto · 0.5%'}</span>
         </motion.div>
       ) : null}
 
@@ -148,7 +153,7 @@ function InteractiveSwapper(): ReactNode {
             aria-label={'Switch assets'}
             onClick={switchAssets}
             className={
-              'absolute -top-5 z-10 flex size-10 items-center justify-center rounded-xl border-4 border-[#0A0A14] bg-[#151522] text-[#A9C0FF] shadow-xl transition-transform hover:rotate-180'
+              'absolute -top-5 z-10 flex size-11 items-center justify-center rounded-xl border-4 border-[#0A0A14] bg-[#151522] text-blueLight shadow-xl transition-transform hover:rotate-180'
             }
           >
             {'⇅'}
@@ -190,6 +195,8 @@ function InteractiveSwapper(): ReactNode {
 }
 
 export function DevelopersHero(): ReactNode {
+  const shouldReduceMotion = useReducedMotion()
+
   return (
     <section className={'relative overflow-hidden pb-16 pt-5 lg:pb-20 lg:pt-4'}>
       <div
@@ -198,19 +205,12 @@ export function DevelopersHero(): ReactNode {
 
       <div className={'container relative grid min-w-0 items-center gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12'}>
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
           className={'min-w-0 lg:pt-4'}
         >
-          <div
-            className={
-              'mb-6 inline-flex items-center gap-2 rounded-full bg-blue/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#B5C8FF]'
-            }
-          >
-            <span className={'size-2 rounded-full bg-[#70E1B1] shadow-[0_0_12px_#70E1B1]'} />
-            {'The ShapeShift Widget'}
-          </div>
+          <SectionEyebrow variant={'pill'}>{'The ShapeShift Widget'}</SectionEyebrow>
           <h1
             className={
               'mb-6 max-w-full text-[46px] font-bold leading-[.98] tracking-[-0.05em] sm:text-[60px] lg:text-[68px]'
@@ -248,7 +248,7 @@ export function DevelopersHero(): ReactNode {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
+          initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, duration: 0.6 }}
           className={
@@ -273,44 +273,36 @@ export function DevelopersHero(): ReactNode {
           <div className={'pointer-events-none absolute inset-[10%] rounded-full bg-blue/25 blur-[90px]'} />
 
           <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+            animate={shouldReduceMotion ? undefined : { rotate: 360 }}
+            transition={shouldReduceMotion ? undefined : { duration: 22, repeat: Infinity, ease: 'linear' }}
             className={'pointer-events-none absolute inset-[7%] rounded-full border border-dashed border-blue/20'}
-          />
-
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 16, repeat: Infinity, ease: 'linear' }}
-            className={'pointer-events-none absolute inset-[17%] rounded-full border border-blue/25'}
           >
-            <span
-              className={'absolute -right-1 top-1/2 size-2.5 rounded-full bg-[#70E1B1] shadow-[0_0_14px_#70E1B1]'}
-            />
+            <span className={'absolute -right-1 top-1/2 size-2.5 rounded-full bg-mint shadow-[0_0_14px_#70E1B1]'} />
           </motion.div>
           <InteractiveSwapper />
 
           <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
+            animate={shouldReduceMotion ? undefined : { y: [0, -8, 0] }}
+            transition={shouldReduceMotion ? undefined : { duration: 5, repeat: Infinity, ease: 'easeInOut' }}
             className={
-              'absolute left-2 top-4 z-30 w-[142px] -rotate-2 rounded-2xl border border-blue/30 bg-[#111827]/95 p-3 shadow-[0_20px_50px_rgba(0,0,0,.45),0_0_30px_rgba(56,97,251,.18)] backdrop-blur-xl sm:left-8 lg:-left-2 lg:top-[12%] lg:w-[160px] lg:p-4'
+              'absolute left-2 top-4 z-30 hidden w-[142px] -rotate-2 rounded-2xl border border-blue/30 bg-[#111827]/95 p-3 shadow-[0_20px_50px_rgba(0,0,0,.45),0_0_30px_rgba(56,97,251,.18)] backdrop-blur-xl sm:block sm:left-8 lg:-left-2 lg:top-[12%] lg:w-[160px] lg:p-4'
             }
           >
             <div className={'mb-2 text-[9px] font-semibold uppercase tracking-[0.12em] text-gray-500 lg:text-[10px]'}>
               {'Smart routing'}
             </div>
             <div className={'text-[11px] font-semibold text-white lg:text-xs'}>{'18 routes compared'}</div>
-            <div className={'mt-2 flex items-center gap-1.5 text-[9px] text-[#70E1B1] lg:text-[10px]'}>
-              <span className={'size-1.5 rounded-full bg-[#70E1B1]'} />
+            <div className={'mt-2 flex items-center gap-1.5 text-[9px] text-mint lg:text-[10px]'}>
+              <span className={'size-1.5 rounded-full bg-mint'} />
               {'Best price selected'}
             </div>
           </motion.div>
 
           <motion.div
-            animate={{ y: [0, 7, 0] }}
-            transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut' }}
+            animate={shouldReduceMotion ? undefined : { y: [0, 7, 0] }}
+            transition={shouldReduceMotion ? undefined : { duration: 5, repeat: Infinity, ease: 'easeInOut' }}
             className={
-              'absolute bottom-4 right-2 z-30 rounded-2xl border border-[#70E1B1]/25 bg-[#101A18]/95 px-3.5 py-3 shadow-[0_20px_50px_rgba(0,0,0,.4),0_0_30px_rgba(112,225,177,.1)] backdrop-blur-xl sm:right-8 lg:bottom-[10%] lg:-right-2 lg:px-4'
+              'absolute bottom-4 right-2 z-30 hidden rounded-2xl border border-mint/25 bg-[#101A18]/95 px-3.5 py-3 shadow-[0_20px_50px_rgba(0,0,0,.4),0_0_30px_rgba(112,225,177,.1)] backdrop-blur-xl sm:block sm:right-8 lg:bottom-[10%] lg:-right-2 lg:px-4'
             }
           >
             <div className={'text-[9px] uppercase tracking-[0.12em] text-gray-500 lg:text-[10px]'}>{'Integration'}</div>

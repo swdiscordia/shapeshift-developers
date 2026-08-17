@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 
 import { Button } from '@/app/[lang]/_components/Button'
 
+import { SectionEyebrow } from './SectionEyebrow'
+
 import type { ReactNode } from 'react'
 
 function WalletVisual(): ReactNode {
@@ -50,7 +52,7 @@ function ChainVisual(): ReactNode {
         <motion.div
           key={symbol}
           animate={{ scale: [1, 1.08, 1] }}
-          transition={{ duration: 2.8, delay: index * 0.45, repeat: Infinity }}
+          transition={{ duration: 2.8, delay: index * 0.45, repeat: Infinity, ease: 'easeInOut' }}
           className={`absolute right-[10%] flex size-11 items-center justify-center rounded-2xl border border-blue/25 bg-[#111A2B] text-lg shadow-xl ${position}`}
         >
           {symbol}
@@ -86,11 +88,11 @@ function RevenueVisual(): ReactNode {
                   }
                 : undefined
             }
-            transition={{ duration: 2.6, repeat: Infinity }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
             className={
               index === 2
                 ? 'mx-auto flex size-12 items-center justify-center rounded-2xl border border-[#70E1B1]/30 bg-[#10221C] font-mono text-xs text-[#70E1B1]'
-                : 'mx-auto flex size-12 items-center justify-center rounded-2xl border border-blue/20 bg-blue/10 font-mono text-xs text-[#8FACFF]'
+                : 'mx-auto flex size-12 items-center justify-center rounded-2xl border border-blue/20 bg-blue/10 font-mono text-xs text-blueLight'
             }
           >
             {number}
@@ -103,7 +105,7 @@ function RevenueVisual(): ReactNode {
       />
       <motion.div
         animate={{ left: ['20%', '78%'], opacity: [0, 1, 1, 0] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
         className={'absolute top-[53px] size-2 rounded-full bg-[#70E1B1] shadow-[0_0_12px_#70E1B1]'}
       />
     </div>
@@ -139,9 +141,7 @@ export function DevelopersUseCases(): ReactNode {
     <section className={'container pt-20 lg:pt-24'}>
       <div className={'mb-12 grid gap-6 lg:grid-cols-[1.1fr_.9fr] lg:items-end'}>
         <div>
-          <div className={'mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-blue'}>
-            {'Built to collaborate'}
-          </div>
+          <SectionEyebrow>{'Built to collaborate'}</SectionEyebrow>
           <h2 className={'max-w-[760px] text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[58px]'}>
             {'Your product. Our routing. Shared growth.'}
           </h2>
@@ -164,7 +164,7 @@ export function DevelopersUseCases(): ReactNode {
             <div className={'rounded-[24px] bg-gradient-to-b from-blue/[0.16] to-blue/[0.03]'}>{useCase.visual}</div>
             <div className={'p-5 pb-6 sm:p-6'}>
               <div className={'mb-7 flex items-center justify-between'}>
-                <span className={'font-mono text-xs text-[#8FACFF]'}>{useCase.number}</span>
+                <span className={'font-mono text-xs text-blueLight'}>{useCase.number}</span>
                 <span className={'text-[10px] font-semibold uppercase tracking-[0.1em] text-gray-500'}>
                   {useCase.eyebrow}
                 </span>

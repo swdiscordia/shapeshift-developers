@@ -1,10 +1,12 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Button } from '@/app/[lang]/_components/Button'
 import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
+
+import { SectionEyebrow } from './SectionEyebrow'
 
 import type { ReactNode } from 'react'
 
@@ -37,21 +39,9 @@ const presets = [
 
 function ThemeStudio({ ctaTitle }: { ctaTitle: string }): ReactNode {
   const [activePreset, setActivePreset] = useState(0)
-  const [hasInteracted, setHasInteracted] = useState(false)
   const preset = presets[activePreset]
 
-  useEffect(() => {
-    if (hasInteracted) return undefined
-    const intervalDuration = window.matchMedia('(min-width: 1024px)').matches ? 2900 : 3800
-    const interval = window.setInterval(
-      () => setActivePreset((currentPreset) => (currentPreset + 1) % presets.length),
-      intervalDuration
-    )
-    return () => window.clearInterval(interval)
-  }, [hasInteracted])
-
   const selectPreset = (index: number): void => {
-    setHasInteracted(true)
     setActivePreset(index)
   }
 
@@ -69,14 +59,7 @@ function ThemeStudio({ ctaTitle }: { ctaTitle: string }): ReactNode {
 
       <div className={'relative grid gap-8 lg:grid-cols-[.68fr_1.32fr] lg:items-center lg:gap-12'}>
         <div>
-          <div
-            className={
-              'mb-4 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#70E1B1]'
-            }
-          >
-            <span className={'size-1.5 rounded-full bg-[#70E1B1] shadow-[0_0_9px_#70E1B1]'} />
-            {'Live theme studio'}
-          </div>
+          <SectionEyebrow dot={'mint'}>{'Live theme studio'}</SectionEyebrow>
           <h3 className={'mb-4 max-w-[440px] text-[34px] font-bold leading-[1.05] tracking-[-0.04em] sm:text-[44px]'}>
             {'Make it feel native to your product.'}
           </h3>
@@ -136,8 +119,8 @@ function ThemeStudio({ ctaTitle }: { ctaTitle: string }): ReactNode {
             <span className={'size-2 rounded-full bg-white/10'} />
             <span className={'size-2 rounded-full bg-white/10'} />
             <span className={'ml-3 font-mono text-[10px] text-gray-400'}>{'your-product.com/swap'}</span>
-            <span className={'ml-auto flex items-center gap-1.5 text-[10px] font-medium text-[#70E1B1]'}>
-              <span className={'size-1.5 rounded-full bg-[#70E1B1]'} />
+            <span className={'ml-auto flex items-center gap-1.5 text-[10px] font-medium text-mint'}>
+              <span className={'size-1.5 rounded-full bg-mint'} />
               {'LIVE'}
             </span>
           </div>
@@ -288,10 +271,10 @@ function ThemeStudio({ ctaTitle }: { ctaTitle: string }): ReactNode {
 export function DevelopersWidgetSection(): ReactNode {
   const { widget } = DEVELOPERS_DICT.page
   return (
-    <section id={'widget'} className={'container scroll-mt-28 pt-16 lg:scroll-mt-32 lg:pt-20'}>
+    <section id={'widget'} className={'container scroll-mt-28 pt-20 lg:scroll-mt-32 lg:pt-24'}>
       <div className={'mb-10 grid gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-end'}>
         <div>
-          <div className={'mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-blue'}>{widget.eyebrow}</div>
+          <SectionEyebrow>{widget.eyebrow}</SectionEyebrow>
           <h2 className={'text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>{widget.title}</h2>
         </div>
         <p className={'max-w-[680px] text-lg leading-relaxed text-secondary'}>{widget.description}</p>
