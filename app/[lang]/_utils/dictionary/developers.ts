@@ -6,16 +6,6 @@ export const DEVELOPERS_DICT = {
     ctaButton: 'View API Docs',
   },
   page: {
-    hero: {
-      eyebrow: 'ShapeShift Widget + API',
-      titlePrefix: 'Add ',
-      titleHighlight: 'multichain swaps',
-      titleSuffix: ' to your product',
-      description:
-        'Launch fast with our ready-to-embed Widget or build a fully custom experience with the API. One integration, 48+ chains, non-custodial execution, and partner revenue on every swap.',
-      ctaWidget: 'Explore the Widget',
-      ctaApi: 'Explore the API',
-    },
     partnerLogos: {
       label: 'Routing across 18 protocols',
     },
@@ -64,7 +54,7 @@ export const DEVELOPERS_DICT = {
       eyebrow: 'The API',
       title: 'Skip the UI and build your own',
       description:
-        'The same routing engine behind the widget, exposed as a REST API. Non-custodial end to end: we return transactions, your users sign them.',
+        'The same routing engine behind the widget, exposed as a REST API. We return unsigned transactions — your users sign and broadcast them, funds never touch ShapeShift.',
       endpoints: [
         {
           method: 'GET /v1/assets',

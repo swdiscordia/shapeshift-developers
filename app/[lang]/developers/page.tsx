@@ -4,9 +4,7 @@ import { DevelopersEconomicsSection } from './_components/DevelopersEconomicsSec
 import { DevelopersFaq } from './_components/DevelopersFaq'
 import { DevelopersHero } from './_components/DevelopersHero'
 import { DevelopersPartnerLogos } from './_components/DevelopersPartnerLogos'
-import { DevelopersRevenueShare } from './_components/DevelopersRevenueShare'
 import { DevelopersStats } from './_components/DevelopersStats'
-import { DevelopersSwapperProduct } from './_components/DevelopersSwapperProduct'
 import { DevelopersUseCases } from './_components/DevelopersUseCases'
 import { DevelopersWhyShapeShift } from './_components/DevelopersWhyShapeShift'
 import { DevelopersWidgetSection } from './_components/DevelopersWidgetSection'
@@ -18,8 +16,6 @@ export default function DevelopersPage(): ReactNode {
     <div className={'overflow-hidden'}>
       <DevelopersHero />
       <DevelopersStats />
-      <DevelopersSwapperProduct />
-      <DevelopersRevenueShare />
       <DevelopersPartnerLogos />
       <DevelopersWhyShapeShift />
       <DevelopersUseCases />
