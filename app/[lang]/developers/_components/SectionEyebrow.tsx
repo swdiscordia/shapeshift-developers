@@ -35,7 +35,8 @@ export function SectionEyebrow({ children, variant = 'text', dot, className }: T
   return (
     <div
       className={cl(
-        'mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-blue',
+        'mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-blue',
+        dot ? 'flex items-center gap-2' : null,
         className
       )}
     >
