@@ -34,13 +34,6 @@ function ProtocolRow(): ReactNode {
           </div>
         )
       })}
-      <span
-        className={
-          'shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-gray-400'
-        }
-      >
-        {'+10 routing integrations'}
-      </span>
     </div>
   )
 }

@@ -11,48 +11,49 @@ const principles = [
 function RouterIllustration(): ReactNode {
   return (
     <div className={'rounded-[30px] border border-white/[0.06] bg-[#0D111A] p-6 sm:p-8'}>
-      <div className={'relative flex flex-col items-stretch gap-0 sm:flex-row sm:items-center sm:gap-0'}>
+      <div className={'relative flex flex-col items-stretch gap-0 sm:flex-row sm:gap-0'}>
         <div
           className={
             'pointer-events-none absolute left-1/2 top-1/2 hidden size-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue/[0.08] blur-[70px] sm:block'
           }
         />
 
-        <div className={'relative z-10 rounded-[16px] border border-white/[0.08] bg-[#171D2B] px-4 py-3 sm:flex-1'}>
+        <div
+          className={
+            'relative z-10 rounded-[16px] border border-white/[0.08] bg-[#171D2B] px-4 py-3 sm:flex sm:flex-1 sm:flex-col sm:justify-center'
+          }
+        >
           <div className={'text-xs text-gray-500'}>{'Request'}</div>
           <div className={'mt-1 text-xs font-semibold'}>{'Your product'}</div>
         </div>
 
         <div
           className={
-            'my-3 h-6 w-px bg-gradient-to-b from-blue to-blue/40 sm:my-0 sm:h-px sm:w-auto sm:flex-1 sm:bg-gradient-to-r'
+            'my-3 h-6 w-px bg-gradient-to-b from-blue to-blue/40 sm:my-0 sm:h-px sm:w-auto sm:flex-1 sm:self-center sm:bg-gradient-to-r'
           }
         />
 
         <div
           className={
-            'relative z-10 shrink-0 rounded-[16px] border border-blue/30 bg-[#131A2A] px-5 py-3 text-center shadow-[0_18px_50px_rgba(0,0,0,.35)] sm:mx-2'
+            'relative z-10 shrink-0 rounded-[16px] border border-blue/30 bg-[#131A2A] px-5 py-3 text-center shadow-[0_18px_50px_rgba(0,0,0,.35)] sm:mx-2 sm:flex sm:flex-col sm:justify-center'
           }
         >
-          <ShapeshiftLogo className={'mx-auto h-3 w-auto text-blueLight sm:mx-0'} />
-          <div className={'mt-1.5 text-xs font-semibold'}>{'Routing engine'}</div>
+          <ShapeshiftLogo className={'mx-auto h-6 w-auto text-blueLight sm:mx-0'} />
+          <div className={'mt-2 text-xs font-semibold'}>{'Routing engine'}</div>
         </div>
 
         <div
           className={
-            'my-3 h-6 w-px bg-gradient-to-b from-blue/40 to-mint sm:my-0 sm:h-px sm:w-auto sm:flex-1 sm:bg-gradient-to-r'
+            'my-3 h-6 w-px bg-gradient-to-b from-blue/40 to-mint sm:my-0 sm:h-px sm:w-auto sm:flex-1 sm:self-center sm:bg-gradient-to-r'
           }
         />
 
         <div
           className={
-            'relative z-10 rounded-[16px] border border-mint/20 bg-[#12201D] px-4 py-3 sm:flex-1 sm:text-right'
+            'relative z-10 rounded-[16px] border border-mint/20 bg-[#12201D] px-4 py-3 sm:flex sm:flex-1 sm:flex-col sm:justify-center sm:text-right'
           }
         >
-          <div className={'flex items-center gap-1.5 text-xs text-mint sm:justify-end'}>
-            <span className={'size-1.5 rounded-full bg-mint'} />
-            {'Selected'}
-          </div>
+          <div className={'text-xs text-mint'}>{'Selected'}</div>
           <div className={'mt-1 text-xs font-semibold'}>{'Best route'}</div>
         </div>
       </div>

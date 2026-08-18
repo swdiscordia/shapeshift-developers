@@ -10,10 +10,12 @@ import { SectionEyebrow } from './SectionEyebrow'
 import type { ReactNode } from 'react'
 
 // The real widget.shapeshift.com card, measured directly against the live page: its own
-// nav/title block is 188px tall, and the Swap card below it is exactly 420x507. We embed the
-// real page and crop to just the card instead of hand-building a fake swap UI.
+// nav/title block is 188px tall, and the Swap card is 420x507 empty/disconnected. We embed the
+// real page and crop to just the card instead of hand-building a fake swap UI. The card grows
+// once a wallet is connected (balance lines, a receive-address row) — the extra height below is
+// headroom so that real, connected-state content never gets cropped off.
 const WIDGET_CARD_WIDTH = 420
-const WIDGET_CARD_HEIGHT = 507
+const WIDGET_CARD_HEIGHT = 550
 const WIDGET_CROP_TOP = 188
 
 function RealWidgetEmbed(): ReactNode {

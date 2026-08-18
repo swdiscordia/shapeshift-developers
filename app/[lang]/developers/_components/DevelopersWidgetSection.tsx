@@ -26,9 +26,9 @@ const options = [
 function ThemeGallery(): ReactNode {
   return (
     <div className={'rounded-[32px] border border-white/[0.06] bg-[#0D1019] p-6 sm:p-8 lg:p-10'}>
-      <div className={'grid grid-cols-4 gap-x-3 gap-y-6 sm:grid-cols-7 sm:gap-4'}>
+      <div className={'flex flex-wrap justify-center gap-x-4 gap-y-6 sm:flex-nowrap sm:justify-between'}>
         {presets.map((preset) => (
-          <div key={preset.name} className={'flex flex-col items-center gap-2.5'}>
+          <div key={preset.name} className={'flex w-14 flex-col items-center gap-2.5'}>
             <div
               className={'size-11 rounded-2xl sm:size-14'}
               style={{ backgroundColor: preset.color, boxShadow: `0 10px 28px ${preset.color}45` }}

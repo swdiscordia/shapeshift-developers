@@ -1,106 +1,122 @@
 import Image from 'next/image'
 
 import { Button } from '@/app/[lang]/_components/Button'
-import { IconChains } from '@/app/[lang]/_icons/IconChains'
-import { IconCheckCircle } from '@/app/[lang]/_icons/IconCheckCircle'
-import { IconDapp } from '@/app/[lang]/_icons/IconDapp'
 import { IconDollar } from '@/app/[lang]/_icons/IconDollar'
-import { IconTrade } from '@/app/[lang]/_icons/IconTrade'
-import { IconWallet } from '@/app/[lang]/_icons/IconWallet'
-import { cl } from '@/app/[lang]/_utils/cl'
+import { IconFox } from '@/app/[lang]/_icons/IconFox'
+import { IconPercent } from '@/app/[lang]/_icons/IconPercent'
+import { IconSwapCircle } from '@/app/[lang]/_icons/IconSwapCircle'
 
 import type { ReactNode } from 'react'
 
-type TFlowNode = {
-  label: string
-  icon: ReactNode
-  final?: boolean
-}
-
-function FlowRow({ nodes }: { nodes: TFlowNode[] }): ReactNode {
+// Card 1 — the point is containment: the swap lives inside the partner's own product frame,
+// there's nothing to "redirect" away from because the user never leaves it.
+function WalletVisual(): ReactNode {
   return (
-    <div className={'flex h-36 items-center justify-center gap-2'}>
-      {nodes.map((node, index) => (
-        <div key={node.label} className={'flex items-center'}>
-          {index > 0 ? <div className={'h-px w-6 bg-blue/25 sm:w-10'} /> : null}
-          <div className={'flex flex-col items-center gap-2'}>
-            <div
-              className={cl(
-                'flex size-11 items-center justify-center rounded-2xl border',
-                node.final ? 'border-mint/25 bg-mint/10' : 'border-blue/20 bg-blue/10'
-              )}
-            >
-              {node.icon}
-            </div>
-            <span className={'whitespace-nowrap text-[10px] text-gray-500'}>{node.label}</span>
+    <div className={'grid h-36 grid-rows-[1fr_auto] items-center justify-items-center gap-2 px-5 pb-3 pt-5'}>
+      <div
+        className={
+          'relative flex items-center justify-center rounded-2xl border border-dashed border-blue/25 px-8 py-5'
+        }
+      >
+        <span className={'absolute -top-2.5 left-4 bg-[#161c2c] px-2 text-[10px] text-gray-500'}>{'Your product'}</span>
+        <div className={'flex items-center gap-2.5 rounded-xl border border-white/10 bg-[#0D1220] px-4 py-2.5'}>
+          <div className={'flex size-7 items-center justify-center rounded-full bg-blue/15 text-blueLight'}>
+            <IconSwapCircle className={'size-4'} />
           </div>
+          <span className={'text-xs font-semibold'}>{'ETH → BTC'}</span>
         </div>
-      ))}
+      </div>
+      <span className={'text-[10px] text-gray-500'}>{'Nothing to redirect to'}</span>
     </div>
   )
 }
 
-function WalletVisual(): ReactNode {
-  return (
-    <FlowRow
-      nodes={[
-        { label: 'Your product', icon: <IconDapp className={'size-5'} /> },
-        { label: 'Swap', icon: <IconTrade className={'size-5'} /> },
-        { label: 'No redirect', icon: <IconCheckCircle className={'size-5'} />, final: true },
-      ]}
-    />
-  )
-}
-
+// Card 2 — one integration fans out to many real chains. Bitcoin/Ethereum/Solana are the real
+// icon assets this repo already ships (/public/widget/); "+45" completes the real 48+ figure.
 function ChainVisual(): ReactNode {
   return (
-    <FlowRow
-      nodes={[
-        { label: 'Your chain', icon: <IconChains className={'size-5'} /> },
-        { label: 'ShapeShift', icon: <IconTrade className={'size-5'} /> },
-        {
-          label: '48+ chains',
-          final: true,
-          icon: (
-            <div className={'flex -space-x-1.5'}>
-              <Image
-                src={'/widget/btc_icon.png'}
-                alt={''}
-                width={16}
-                height={16}
-                className={'rounded-full ring-2 ring-[#111522]'}
-              />
-              <Image
-                src={'/widget/eth_icon.png'}
-                alt={''}
-                width={16}
-                height={16}
-                className={'rounded-full ring-2 ring-[#111522]'}
-              />
-              <Image
-                src={'/widget/sol_icon.png'}
-                alt={''}
-                width={16}
-                height={16}
-                className={'rounded-full ring-2 ring-[#111522]'}
-              />
-            </div>
-          ),
-        },
-      ]}
-    />
+    <div className={'grid h-36 grid-rows-[1fr_auto] items-center justify-items-center gap-2 px-5 pt-5'}>
+      <div className={'flex items-center gap-3'}>
+        <div
+          className={'flex size-11 shrink-0 items-center justify-center rounded-2xl border border-blue/20 bg-blue/10'}
+        >
+          <IconFox className={'size-5 text-blueLight'} />
+        </div>
+        <div className={'h-px w-6 bg-blue/25'} />
+        <div className={'flex -space-x-2.5'}>
+          <Image
+            src={'/widget/btc_icon.png'}
+            alt={'Bitcoin'}
+            width={32}
+            height={32}
+            className={'rounded-full ring-2 ring-[#111522]'}
+          />
+          <Image
+            src={'/widget/eth_icon.png'}
+            alt={'Ethereum'}
+            width={32}
+            height={32}
+            className={'rounded-full ring-2 ring-[#111522]'}
+          />
+          <Image
+            src={'/widget/sol_icon.png'}
+            alt={'Solana'}
+            width={32}
+            height={32}
+            className={'rounded-full ring-2 ring-[#111522]'}
+          />
+          <div
+            className={
+              'flex size-8 items-center justify-center rounded-full bg-mint/15 text-[10px] font-semibold text-mint ring-2 ring-[#111522]'
+            }
+          >
+            {'+45'}
+          </div>
+        </div>
+      </div>
+      <div className={'text-[10px] text-gray-500'}>{'One integration, every chain'}</div>
+    </div>
   )
 }
 
+// Card 3 — a real causal sequence (swap happens, a fee is attributed, it settles to your
+// wallet), so a 3-step flow is the right shape here, unlike cards 1 and 2. Icons and connecting
+// lines sit in one grid row so they share the exact same vertical center — labels are a separate
+// row below and can't pull the lines off-center.
 function RevenueVisual(): ReactNode {
+  const nodes = [
+    { label: 'Every swap', icon: <IconSwapCircle className={'size-5'} />, final: false },
+    { label: 'Your fee', icon: <IconPercent className={'size-4'} />, final: false },
+    { label: 'Paid on-chain', icon: <IconDollar className={'size-4'} />, final: true },
+  ] as const
+
+  const iconCells = nodes.flatMap((node, index) => {
+    const icon = (
+      <div
+        key={node.label}
+        className={
+          node.final
+            ? 'flex size-11 items-center justify-center rounded-2xl border border-mint/25 bg-mint/10 text-mint'
+            : 'flex size-11 items-center justify-center rounded-2xl border border-blue/20 bg-blue/10 text-blueLight'
+        }
+      >
+        {node.icon}
+      </div>
+    )
+    return index > 0 ? [<div key={`line-${node.label}`} className={'h-px bg-blue/25'} />, icon] : [icon]
+  })
+
   return (
-    <FlowRow
-      nodes={[
-        { label: 'User', icon: <IconWallet className={'size-5'} /> },
-        { label: 'Swap', icon: <IconTrade className={'size-5'} /> },
-        { label: 'Your wallet', icon: <IconDollar className={'size-5'} />, final: true },
-      ]}
-    />
+    <div className={'grid h-36 grid-rows-[1fr_auto] items-center justify-items-stretch gap-2 px-8 pt-5'}>
+      <div className={'grid grid-cols-[auto_1fr_auto_1fr_auto] items-center'}>{iconCells}</div>
+      <div className={'grid grid-cols-[auto_1fr_auto_1fr_auto]'}>
+        <span className={'text-center text-[10px] text-gray-500'}>{nodes[0].label}</span>
+        <span />
+        <span className={'text-center text-[10px] text-gray-500'}>{nodes[1].label}</span>
+        <span />
+        <span className={'text-center text-[10px] text-gray-500'}>{nodes[2].label}</span>
+      </div>
+    </div>
   )
 }
 
