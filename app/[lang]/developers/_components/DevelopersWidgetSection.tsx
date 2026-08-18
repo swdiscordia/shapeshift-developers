@@ -23,18 +23,45 @@ const options = [
   'Filled or outline buttons',
 ] as const
 
+// Each swatch renders the preset's real accent color on an actual button shape, on a small dark
+// "product surface" of its own, with a color-matched glow behind it — so it reads as a preview
+// of what selecting the preset does, not just a flat color chip.
+function PresetCard({ preset }: { preset: { name: string; color: string } }): ReactNode {
+  return (
+    <div className={'group flex w-[104px] shrink-0 flex-col items-center gap-3 sm:w-auto sm:flex-1'}>
+      <div
+        className={
+          'relative flex h-24 w-full items-end overflow-hidden rounded-2xl border border-white/[0.08] bg-[#08090f] p-3 transition-transform duration-300 ease-out group-hover:-translate-y-1'
+        }
+      >
+        <div
+          className={
+            'pointer-events-none absolute -top-6 left-1/2 size-20 -translate-x-1/2 rounded-full opacity-[0.35] blur-2xl'
+          }
+          style={{ backgroundColor: preset.color }}
+        />
+        <div
+          className={'relative w-full rounded-lg py-2 text-center text-[11px] font-semibold text-white'}
+          style={{ backgroundColor: preset.color, boxShadow: `0 10px 22px -6px ${preset.color}` }}
+        >
+          {'Connect'}
+        </div>
+      </div>
+      <span className={'text-xs text-gray-400'}>{preset.name}</span>
+    </div>
+  )
+}
+
 function ThemeGallery(): ReactNode {
   return (
-    <div className={'rounded-[32px] border border-white/[0.06] bg-[#0D1019] p-6 sm:p-8 lg:p-10'}>
-      <div className={'flex flex-wrap justify-center gap-x-4 gap-y-6 sm:flex-nowrap sm:justify-between'}>
+    <div
+      className={
+        'rounded-[32px] border border-white/[0.06] bg-gradient-to-b from-[#12141f] to-[#0a0b11] p-6 sm:p-8 lg:p-10'
+      }
+    >
+      <div className={'flex flex-wrap justify-center gap-4 sm:flex-nowrap sm:justify-between sm:gap-5'}>
         {presets.map((preset) => (
-          <div key={preset.name} className={'flex w-14 flex-col items-center gap-2.5'}>
-            <div
-              className={'size-11 rounded-2xl sm:size-14'}
-              style={{ backgroundColor: preset.color, boxShadow: `0 10px 28px ${preset.color}45` }}
-            />
-            <span className={'text-xs text-gray-400'}>{preset.name}</span>
-          </div>
+          <PresetCard key={preset.name} preset={preset} />
         ))}
       </div>
       <div className={'mt-8 flex flex-wrap gap-2 border-t border-white/[0.06] pt-6'}>
