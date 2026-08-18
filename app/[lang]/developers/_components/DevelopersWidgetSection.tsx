@@ -1,56 +1,34 @@
+import Image from 'next/image'
+
 import { Button } from '@/app/[lang]/_components/Button'
 import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
 
 import type { ReactNode } from 'react'
 
-// Real preset names and accent colors, read directly off widget.shapeshift.com's own
-// "Customize Widget" panel — not invented. The widget itself also exposes freeform background,
-// card, and accent color pickers plus a radius slider; these seven are just its starting points.
-const presets = [
-  { name: 'Blue', color: '#3861FB' },
-  { name: 'Rose', color: '#F43F5E' },
-  { name: 'Purple', color: '#A855F7' },
-  { name: 'Cyan', color: '#06B6D4' },
-  { name: 'Green', color: '#10B981' },
-  { name: 'Orange', color: '#F97316' },
-  { name: 'Stucco', color: '#BEA989' },
+// Two real screenshots of widget.shapeshift.com's own customize panel, captured by actually
+// clicking its controls (preset, theme, button style, radius slider) — not mocked up. Chosen to
+// contrast as much as the real options allow in two frames: dark/rounded/filled vs
+// light/sharp-cornered/outline.
+const comparisons = [
+  {
+    src: '/developers/widget-preset-blue.png',
+    width: 840,
+    height: 1014,
+    caption: 'Blue preset · Dark theme · Filled buttons',
+  },
+  {
+    src: '/developers/widget-preset-green.png',
+    width: 840,
+    height: 1018,
+    caption: 'Green preset · Light theme · Outline buttons · 4px radius',
+  },
 ] as const
 
 const options = [
-  'Light or dark theme',
+  'Freeform background, card & accent colors',
   'Inline or modal display',
   'Adjustable corner radius',
-  'Filled or outline buttons',
 ] as const
-
-// Each swatch renders the preset's real accent color on an actual button shape, on a small dark
-// "product surface" of its own, with a color-matched glow behind it — so it reads as a preview
-// of what selecting the preset does, not just a flat color chip.
-function PresetCard({ preset }: { preset: { name: string; color: string } }): ReactNode {
-  return (
-    <div className={'group flex w-[104px] shrink-0 flex-col items-center gap-3 sm:w-auto sm:flex-1'}>
-      <div
-        className={
-          'relative flex h-24 w-full items-end overflow-hidden rounded-2xl border border-white/[0.08] bg-[#08090f] p-3 transition-transform duration-300 ease-out group-hover:-translate-y-1'
-        }
-      >
-        <div
-          className={
-            'pointer-events-none absolute -top-6 left-1/2 size-20 -translate-x-1/2 rounded-full opacity-[0.35] blur-2xl'
-          }
-          style={{ backgroundColor: preset.color }}
-        />
-        <div
-          className={'relative w-full rounded-lg py-2 text-center text-[11px] font-semibold text-white'}
-          style={{ backgroundColor: preset.color, boxShadow: `0 10px 22px -6px ${preset.color}` }}
-        >
-          {'Connect'}
-        </div>
-      </div>
-      <span className={'text-xs text-gray-400'}>{preset.name}</span>
-    </div>
-  )
-}
 
 function ThemeGallery(): ReactNode {
   return (
@@ -59,12 +37,17 @@ function ThemeGallery(): ReactNode {
         'rounded-[32px] border border-white/[0.06] bg-gradient-to-b from-[#12141f] to-[#0a0b11] p-6 sm:p-8 lg:p-10'
       }
     >
-      <div className={'flex flex-wrap justify-center gap-4 sm:flex-nowrap sm:justify-between sm:gap-5'}>
-        {presets.map((preset) => (
-          <PresetCard key={preset.name} preset={preset} />
+      <div className={'grid gap-6 sm:grid-cols-2 sm:gap-8'}>
+        {comparisons.map((item) => (
+          <div key={item.src} className={'flex flex-col gap-3'}>
+            <div className={'overflow-hidden rounded-2xl border border-white/[0.08] shadow-2xl'}>
+              <Image src={item.src} alt={item.caption} width={item.width} height={item.height} className={'w-full'} />
+            </div>
+            <span className={'text-center text-xs text-gray-500'}>{item.caption}</span>
+          </div>
         ))}
       </div>
-      <div className={'mt-8 flex flex-wrap gap-2 border-t border-white/[0.06] pt-6'}>
+      <div className={'mt-8 flex flex-wrap justify-center gap-2 border-t border-white/[0.06] pt-6'}>
         {options.map((option) => (
           <span
             key={option}
@@ -93,7 +76,7 @@ export function DevelopersWidgetSection(): ReactNode {
         <div>
           <h3 className={'mb-2 text-2xl font-semibold tracking-[-0.02em]'}>{'Make it feel native to your product.'}</h3>
           <p className={'max-w-[520px] text-sm leading-relaxed text-gray-400 sm:text-base'}>
-            {'Ships with seven presets, or set your own background, card, and accent colors from the dashboard.'}
+            {'Two real configurations of the same widget — same component, different brand.'}
           </p>
         </div>
         <Button href={'https://widget.shapeshift.com/'} variant={'blue'} title={widget.ctaButton} hasArrow />
