@@ -1,4 +1,5 @@
 import { Button } from '@/app/[lang]/_components/Button'
+import { developerDocsUrl } from '@/app/[lang]/_utils/constants'
 import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
 
 import type { ReactNode } from 'react'
@@ -25,7 +26,7 @@ export function DevelopersCta(): ReactNode {
           <p className={'mb-10 text-lg text-white'}>{cta.description}</p>
           <div className={'flex flex-wrap items-center justify-center gap-3.5'}>
             <Button
-              href={'https://widget.shapeshift.com/'}
+              href={developerDocsUrl}
               variant={'blue'}
               title={cta.ctaPrimary}
               hasArrow

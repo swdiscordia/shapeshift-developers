@@ -10,13 +10,21 @@ import { SectionEyebrow } from './SectionEyebrow'
 import type { ReactNode } from 'react'
 
 // The real widget.shapeshift.com card, measured directly against the live page: its own
-// nav/title block is 188px tall, and the Swap card is 420x507 empty/disconnected. We embed the
-// real page and crop to just the card instead of hand-building a fake swap UI. The card grows
-// once a wallet is connected (balance lines, a receive-address row) — the extra height below is
-// headroom so that real, connected-state content never gets cropped off.
+// nav/title block is 188px tall, and the Swap card is 420x507 empty/disconnected, growing to
+// ~580px once a wallet is connected (balance lines, a receive-address row) — WIDGET_CARD_HEIGHT
+// has headroom for that so real connected-state content doesn't get cropped off.
+//
+// The iframe's own `height` attribute matters beyond sizing: the widget's wallet-connect modal
+// is `position: fixed` sized to the iframe's OWN internal viewport, not to the cropped window we
+// display. An oversized iframe height (e.g. a big flat safety margin) makes that modal render
+// far below our visible crop, appearing cut off when a user actually connects. Keeping the
+// iframe's height equal to exactly what we crop to (WIDGET_CROP_TOP + WIDGET_CARD_HEIGHT) keeps
+// the modal's centered content inside the visible window — verified directly against the live
+// widget with a real wallet-connect click.
 const WIDGET_CARD_WIDTH = 420
-const WIDGET_CARD_HEIGHT = 550
+const WIDGET_CARD_HEIGHT = 590
 const WIDGET_CROP_TOP = 188
+const WIDGET_IFRAME_HEIGHT = WIDGET_CROP_TOP + WIDGET_CARD_HEIGHT
 
 function RealWidgetEmbed(): ReactNode {
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -45,7 +53,7 @@ function RealWidgetEmbed(): ReactNode {
         src={'https://widget.shapeshift.com/'}
         title={'ShapeShift Widget'}
         width={WIDGET_CARD_WIDTH}
-        height={900}
+        height={WIDGET_IFRAME_HEIGHT}
         allow={'clipboard-write'}
         style={{
           border: 0,

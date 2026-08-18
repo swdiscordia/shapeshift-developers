@@ -170,12 +170,7 @@ export function DevelopersUseCases(): ReactNode {
           >
             <div className={'rounded-[24px] bg-gradient-to-b from-blue/[0.16] to-blue/[0.03]'}>{useCase.visual}</div>
             <div className={'p-5 pb-6 sm:p-6'}>
-              <div className={'mb-7 flex items-center justify-between'}>
-                <span className={'font-mono text-xs text-blueLight'}>{useCase.number}</span>
-                <span className={'text-[10px] font-semibold uppercase tracking-[0.1em] text-gray-500'}>
-                  {useCase.eyebrow}
-                </span>
-              </div>
+              <span className={'mb-5 block font-mono text-xs text-blueLight'}>{useCase.number}</span>
               <h3 className={'mb-3 text-2xl font-semibold leading-tight tracking-[-0.025em]'}>{useCase.title}</h3>
               <p className={'text-[15px] leading-relaxed text-gray-400'}>{useCase.description}</p>
             </div>
