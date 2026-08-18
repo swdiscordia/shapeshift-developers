@@ -89,12 +89,12 @@ export function DevelopersHero(): ReactNode {
           </p>
           <div className={'mb-8 flex flex-col gap-3 sm:flex-row'}>
             <Button href={'https://widget.shapeshift.com/'} variant={'blue'} title={'Try the Widget'} hasArrow />
-            <Button href={'https://discord.gg/shapeshift'} variant={'white'} title={'Talk to partnerships'} />
+            <Button href={'https://discord.gg/shapeshift'} variant={'white'} title={'Talk with us'} />
           </div>
-          <div className={'flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-400'}>
-            {['48+ chains', '18 routing protocols', 'Partner revenue'].map((benefit) => (
-              <span key={benefit} className={'flex items-center gap-2'}>
-                <span className={'size-1.5 rounded-full bg-blue'} />
+          <div className={'flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-400'}>
+            {['48+ chains', '18 routing protocols', 'Partner revenue'].map((benefit, index) => (
+              <span key={benefit} className={'flex items-center'}>
+                {index > 0 ? <span className={'mr-5 text-gray-700'}>{'/'}</span> : null}
                 {benefit}
               </span>
             ))}

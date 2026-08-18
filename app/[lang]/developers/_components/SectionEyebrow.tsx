@@ -19,8 +19,9 @@ function Dot({ color }: { color: 'blue' | 'mint' }): ReactNode {
 }
 
 /**
- * Canonical section label used above every H2 on the /developers page.
- * `pill`: boxed treatment for the hero. `text`: plain label used by every content section.
+ * Small, quiet caption used in a handful of places (the hero pill, the partner-logos strip).
+ * Deliberately understated — no bold color block, no wide tracking — so it reads as a caption,
+ * not a decorative badge.
  */
 export function SectionEyebrow({ children, variant = 'text', dot, className }: TSectionEyebrowProps): ReactNode {
   if (variant === 'pill') {
@@ -33,13 +34,7 @@ export function SectionEyebrow({ children, variant = 'text', dot, className }: T
   }
 
   return (
-    <div
-      className={cl(
-        'mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-blue',
-        dot ? 'flex items-center gap-2' : null,
-        className
-      )}
-    >
+    <div className={cl('text-sm text-gray-500', dot ? 'flex items-center gap-2' : null, className)}>
       {dot ? <Dot color={dot} /> : null}
       {children}
     </div>

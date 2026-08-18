@@ -6,8 +6,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/app/[lang]/_components/Button'
 import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
 
-import { SectionEyebrow } from './SectionEyebrow'
-
 import type { ReactNode } from 'react'
 
 const codePanels = [
@@ -130,10 +128,7 @@ function TypedCodePanel({ activeTab }: { activeTab: number }): ReactNode {
           <span className={'size-2.5 rounded-full bg-stroke'} />
         </div>
         <span className={'font-mono text-xs text-gray-500'}>{codePanels[activeTab].label}</span>
-        <span className={'ml-auto flex items-center gap-2 font-mono text-[10px] text-mint'}>
-          <span className={'size-1.5 rounded-full bg-mint'} />
-          {'LIVE REQUEST'}
-        </span>
+        <span className={'ml-auto font-mono text-[10px] text-gray-500'}>{'EXAMPLE'}</span>
       </div>
       <pre
         className={
@@ -160,7 +155,6 @@ export function DevelopersApiSection(): ReactNode {
 
   return (
     <section id={'api'} className={'container pt-20 lg:pt-24'}>
-      <SectionEyebrow>{api.eyebrow}</SectionEyebrow>
       <h2 className={'mb-4 text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>{api.title}</h2>
       <p className={'mb-14 max-w-[640px] text-lg leading-relaxed text-secondary'}>{api.description}</p>
 
