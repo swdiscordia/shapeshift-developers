@@ -97,14 +97,7 @@ export function DevelopersEconomicsSection(): ReactNode {
             'pointer-events-none absolute left-1/2 top-1/2 size-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue/[0.08] blur-[110px]'
           }
         />
-        <div className={'relative flex justify-center border-b border-white/[0.07] pb-5'}>
-          <span className={'flex items-center gap-2 text-[10px] uppercase tracking-[0.12em] text-mint'}>
-            <span className={'size-1.5 rounded-full bg-mint shadow-[0_0_10px_#70E1B1]'} />
-            {'Automatic · transparent · on-chain'}
-          </span>
-        </div>
-
-        <div className={'relative hidden h-[470px] lg:block'}>
+        <div className={'relative hidden h-[470px] pt-2 lg:block'}>
           <svg
             aria-hidden={'true'}
             viewBox={'0 0 1400 430'}
