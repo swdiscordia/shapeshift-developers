@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 import { Button } from '@/app/[lang]/_components/Button'
+import { IconFox } from '@/app/[lang]/_icons/IconFox'
 import { IconSettings } from '@/app/[lang]/_icons/IconSettings'
 import { cl } from '@/app/[lang]/_utils/cl'
 import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
@@ -40,12 +41,7 @@ function LivePreview({ preset }: { preset: TPreset }): ReactNode {
       >
         <div className={'mb-4 flex items-center justify-between'}>
           <span className={'text-base font-semibold text-white'}>{'Swap'}</span>
-          <span
-            className={
-              'flex size-8 items-center justify-center rounded-full text-white/70 transition-colors duration-500'
-            }
-            style={{ backgroundColor: `${preset.accent}1f` }}
-          >
+          <span className={'flex size-8 items-center justify-center rounded-full bg-white/10 text-white/70'}>
             <IconSettings className={'size-4'} />
           </span>
         </div>
@@ -59,11 +55,10 @@ function LivePreview({ preset }: { preset: TPreset }): ReactNode {
             <span className={'text-xl font-semibold text-white'}>{'1.0'}</span>
             <span
               className={
-                'flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold transition-colors duration-500'
+                'flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white'
               }
-              style={{ backgroundColor: `${preset.accent}1f`, color: preset.accent }}
             >
-              <Image src={'/widget/eth_icon.png'} alt={''} width={14} height={14} className={'rounded-full'} />
+              <Image src={'/widget/eth_icon.png'} alt={''} width={16} height={16} className={'rounded-full'} />
               {'ETH'}
             </span>
           </div>
@@ -78,11 +73,11 @@ function LivePreview({ preset }: { preset: TPreset }): ReactNode {
             <span className={'text-xl font-semibold text-white'}>{'2,618'}</span>
             <span
               className={
-                'flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold transition-colors duration-500'
+                'flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-white'
               }
-              style={{ backgroundColor: `${preset.accent}1f`, color: preset.accent }}
             >
-              {'$ USDC'}
+              <Image src={'/widget/usdc_icon.png'} alt={''} width={16} height={16} className={'rounded-full'} />
+              {'USDC'}
             </span>
           </div>
         </div>
@@ -95,7 +90,17 @@ function LivePreview({ preset }: { preset: TPreset }): ReactNode {
         >
           {'Connect Wallet'}
         </button>
-        <div className={'mt-3 text-center text-[10px] text-gray-600'}>{'Powered by ShapeShift'}</div>
+        <div
+          className={
+            'mt-3 flex items-center justify-center gap-1.5 text-[10px] text-gray-600 transition-colors duration-500'
+          }
+        >
+          {'Powered by'}
+          <span className={'flex items-center gap-1 font-semibold'} style={{ color: preset.accent }}>
+            <IconFox className={'size-3'} />
+            {'ShapeShift'}
+          </span>
+        </div>
       </div>
     </div>
   )
