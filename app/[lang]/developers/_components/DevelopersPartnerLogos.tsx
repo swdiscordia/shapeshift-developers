@@ -1,9 +1,10 @@
 'use client'
 
-import { motion } from 'framer-motion'
-
+import { Carousel } from '@/app/[lang]/_components/Carousel'
 import { carouselLogos } from '@/app/[lang]/_utils/constants'
 import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
+
+import { SectionEyebrow } from './SectionEyebrow'
 
 import type { ReactNode } from 'react'
 
@@ -17,19 +18,6 @@ const imageLogos = [
   { key: 'butterNetwork', alt: 'Butter Network' },
   { key: 'jupiter', alt: 'Jupiter' },
 ] as const
-
-const textLogos = [
-  'Portals',
-  'Bebop',
-  'NEAR Intents',
-  'Cetus',
-  'SUN.io',
-  'AVNU',
-  'STON.fi',
-  'Across',
-  'deBridge',
-  'Arbitrum',
-]
 
 function ProtocolRow(): ReactNode {
   return (
@@ -46,11 +34,6 @@ function ProtocolRow(): ReactNode {
           </div>
         )
       })}
-      {textLogos.map((name) => (
-        <span key={name} className={'shrink-0 whitespace-nowrap text-lg font-semibold tracking-[-0.01em] text-white'}>
-          {name}
-        </span>
-      ))}
     </div>
   )
 }
@@ -58,25 +41,17 @@ function ProtocolRow(): ReactNode {
 export function DevelopersPartnerLogos(): ReactNode {
   return (
     <section className={'mt-20 overflow-hidden border-y border-white/[0.07] py-8 lg:mt-24'}>
-      <div className={'container mb-6 flex items-center gap-4'}>
-        <span className={'size-2 rounded-full bg-blue shadow-[0_0_12px_#386FF9]'} />
-        <span className={'text-[11px] font-semibold uppercase tracking-[0.13em] text-white'}>
-          {DEVELOPERS_DICT.page.partnerLogos.label}
-        </span>
+      <div className={'container mb-6'}>
+        <SectionEyebrow dot={'blue'}>{DEVELOPERS_DICT.page.partnerLogos.label}</SectionEyebrow>
       </div>
       <div
         className={
           'relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]'
         }
       >
-        <motion.div
-          className={'flex w-max'}
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 52, repeat: Infinity, ease: 'linear' }}
-        >
+        <Carousel speed={52}>
           <ProtocolRow />
-          <ProtocolRow />
-        </motion.div>
+        </Carousel>
       </div>
     </section>
   )

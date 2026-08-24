@@ -90,7 +90,7 @@ const codePanels = [
 
 function TypedCodePanel({ activeTab }: { activeTab: number }): ReactNode {
   const panelRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(panelRef, { amount: 0.25 })
+  const isInView = useInView(panelRef, { amount: 0.25, once: true })
   const shouldReduceMotion = useReducedMotion()
   const source = codePanels[activeTab].lines.join('\n')
   const [visibleCharacters, setVisibleCharacters] = useState(0)
@@ -128,10 +128,7 @@ function TypedCodePanel({ activeTab }: { activeTab: number }): ReactNode {
           <span className={'size-2.5 rounded-full bg-stroke'} />
         </div>
         <span className={'font-mono text-xs text-gray-500'}>{codePanels[activeTab].label}</span>
-        <span className={'ml-auto flex items-center gap-2 font-mono text-[10px] text-[#70E1B1]'}>
-          <span className={'size-1.5 rounded-full bg-[#70E1B1]'} />
-          {'LIVE REQUEST'}
-        </span>
+        <span className={'ml-auto font-mono text-[10px] text-gray-500'}>{'EXAMPLE'}</span>
       </div>
       <pre
         className={
@@ -144,7 +141,7 @@ function TypedCodePanel({ activeTab }: { activeTab: number }): ReactNode {
             aria-hidden={'true'}
             animate={{ opacity: [1, 0, 1] }}
             transition={{ duration: 0.8, repeat: Infinity }}
-            className={'ml-0.5 inline-block h-[1.1em] w-[7px] translate-y-[2px] bg-[#70E1B1]'}
+            className={'ml-0.5 inline-block h-[1.1em] w-[7px] translate-y-[2px] bg-mint'}
           />
         ) : null}
       </pre>
@@ -158,8 +155,7 @@ export function DevelopersApiSection(): ReactNode {
 
   return (
     <section id={'api'} className={'container pt-20 lg:pt-24'}>
-      <div className={'mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-blue'}>{api.eyebrow}</div>
-      <h2 className={'mb-4 text-[44px] font-bold leading-tight tracking-[-0.02em]'}>{api.title}</h2>
+      <h2 className={'mb-4 text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>{api.title}</h2>
       <p className={'mb-14 max-w-[640px] text-lg leading-relaxed text-secondary'}>{api.description}</p>
 
       <div className={'grid grid-cols-1 items-start gap-16 lg:grid-cols-[1fr_1.1fr]'}>
@@ -172,7 +168,7 @@ export function DevelopersApiSection(): ReactNode {
             >
               <span
                 className={
-                  activeTab === index ? 'font-mono text-[13px] text-[#7FA3FF]' : 'font-mono text-[13px] text-gray-600'
+                  activeTab === index ? 'font-mono text-[13px] text-blueLight' : 'font-mono text-[13px] text-gray-600'
                 }
               >
                 {String(index + 1).padStart(2, '0')}
@@ -190,7 +186,7 @@ export function DevelopersApiSection(): ReactNode {
                   </span>
                   <span
                     className={
-                      'whitespace-nowrap rounded-md bg-blue/10 px-2.5 py-1 font-mono text-[11.5px] text-[#7FA3FF]'
+                      'whitespace-nowrap rounded-md bg-blue/10 px-2.5 py-1 font-mono text-[11.5px] text-blueLight'
                     }
                   >
                     {endpoint.method}

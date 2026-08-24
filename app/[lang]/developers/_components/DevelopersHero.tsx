@@ -1,259 +1,156 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import Image from 'next/image'
-import { useMemo, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/app/[lang]/_components/Button'
 
+import { SectionEyebrow } from './SectionEyebrow'
+
 import type { ReactNode } from 'react'
 
-const assets = {
-  ETH: { name: 'Ethereum', icon: '/widget/eth_icon.png', usd: 3494.4 },
-  BTC: { name: 'Bitcoin', icon: '/widget/btc_icon.png', usd: 72400 },
-  USDC: { name: 'Ethereum', icon: null, usd: 1 },
-} as const
+// The real widget.shapeshift.com card, measured directly against the live page: its own
+// nav/title block is 188px tall, and the Swap card is 420x507 empty/disconnected, growing to
+// ~580px once a wallet is connected (balance lines, a receive-address row) — WIDGET_CARD_HEIGHT
+// has headroom for that so real connected-state content doesn't get cropped off.
+//
+// The iframe's own `height` attribute matters beyond sizing: the widget's wallet-connect modal
+// is `position: fixed` sized to the iframe's OWN internal viewport, not to the cropped window we
+// display. An oversized iframe height (e.g. a big flat safety margin) makes that modal render
+// far below our visible crop, appearing cut off when a user actually connects. Keeping the
+// iframe's height equal to exactly what we crop to (WIDGET_CROP_TOP + WIDGET_CARD_HEIGHT) keeps
+// the modal's centered content inside the visible window — verified directly against the live
+// widget with a real wallet-connect click.
+const WIDGET_CARD_WIDTH = 420
+const WIDGET_CARD_HEIGHT = 590
+const WIDGET_CROP_TOP = 188
+const WIDGET_IFRAME_HEIGHT = WIDGET_CROP_TOP + WIDGET_CARD_HEIGHT
 
-type TAsset = keyof typeof assets
+function RealWidgetEmbed(): ReactNode {
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(1)
 
-const assetOrder = Object.keys(assets) as TAsset[]
-
-function AssetSelector({ asset, onClick }: { asset: TAsset; onClick: () => void }): ReactNode {
-  return (
-    <button
-      type={'button'}
-      onClick={onClick}
-      className={
-        'flex shrink-0 items-center gap-2.5 rounded-xl bg-[#080912] px-3 py-2 transition-colors hover:bg-[#10121D]'
-      }
-    >
-      {assets[asset].icon ? (
-        <Image src={assets[asset].icon} alt={assets[asset].name} width={32} height={32} className={'rounded-full'} />
-      ) : (
-        <span className={'flex size-8 items-center justify-center rounded-full bg-[#2775CA] text-sm font-bold'}>
-          {'$'}
-        </span>
-      )}
-      <div className={'text-left'}>
-        <div className={'text-sm font-semibold'}>{asset}</div>
-        <div className={'text-[10px] text-gray-500'}>{assets[asset].name}</div>
-      </div>
-      <span className={'text-xs text-gray-500'}>{'›'}</span>
-    </button>
-  )
-}
-
-function InteractiveSwapper(): ReactNode {
-  const [sellAsset, setSellAsset] = useState<TAsset>('ETH')
-  const [buyAsset, setBuyAsset] = useState<TAsset>('USDC')
-  const [amount, setAmount] = useState<string>('1.50')
-  const [isConnected, setIsConnected] = useState(false)
-  const [isShowingSettings, setIsShowingSettings] = useState(false)
-  const parsedAmount = Number.parseFloat(amount) || 0
-  const output = useMemo(
-    () => ((parsedAmount * assets[sellAsset].usd) / assets[buyAsset].usd) * 0.998,
-    [buyAsset, parsedAmount, sellAsset]
-  )
-
-  const cycleAsset = (current: TAsset, blocked: TAsset): TAsset => {
-    const currentIndex = assetOrder.indexOf(current)
-    return (
-      assetOrder.find((item, index) => index > currentIndex && item !== blocked) ??
-      assetOrder.find((item) => item !== blocked) ??
-      current
-    )
-  }
-
-  const switchAssets = (): void => {
-    setSellAsset(buyAsset)
-    setBuyAsset(sellAsset)
-  }
+  useEffect(() => {
+    const el = wrapperRef.current
+    if (!el) return undefined
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width ?? WIDGET_CARD_WIDTH
+      setScale(Math.min(1, width / WIDGET_CARD_WIDTH))
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div
+      ref={wrapperRef}
       className={
-        'relative z-20 w-full max-w-[480px] overflow-hidden rounded-[28px] border border-white/[0.07] bg-[#0A0A14] shadow-[0_35px_100px_rgba(0,0,0,.58),0_0_80px_rgba(56,111,249,.12)]'
+        'relative z-20 w-full max-w-[420px] overflow-hidden rounded-[28px] border border-blue/30 bg-[#0A0A14] shadow-[0_35px_100px_rgba(0,0,0,.62),0_0_90px_rgba(56,111,249,.3)]'
       }
+      style={{ height: WIDGET_CARD_HEIGHT * scale }}
     >
-      <div className={'flex items-center justify-between border-b border-white/[0.08] px-5 py-5 sm:px-6'}>
-        <div className={'text-lg font-semibold'}>{'Swap'}</div>
-        <div className={'flex items-center gap-2'}>
-          <button
-            type={'button'}
-            onClick={() => setIsConnected((value) => !value)}
-            className={'rounded-xl border border-white/15 px-4 py-2.5 text-xs font-semibold hover:bg-white/5'}
-          >
-            {isConnected ? 'Connected' : 'Connect'}
-          </button>
-          <button
-            type={'button'}
-            aria-label={'Widget settings'}
-            onClick={() => setIsShowingSettings((value) => !value)}
-            className={
-              'flex size-10 items-center justify-center rounded-xl text-xl text-gray-400 hover:bg-white/5 hover:text-white'
-            }
-          >
-            {'⚙'}
-          </button>
-        </div>
-      </div>
-
-      {isShowingSettings ? (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          className={
-            'mx-5 mt-5 flex items-center justify-between rounded-2xl border border-white/[0.08] bg-[#11121C] px-4 py-3 text-xs'
-          }
-        >
-          <span className={'text-gray-400'}>{'Slippage tolerance'}</span>
-          <span className={'rounded-lg bg-blue/15 px-3 py-1.5 font-semibold text-[#9CB5FF]'}>{'Auto · 0.5%'}</span>
-        </motion.div>
-      ) : null}
-
-      <div className={'space-y-2 p-4 sm:p-5'}>
-        <label className={'block rounded-[20px] border border-white/[0.06] bg-[#151522] p-4 sm:p-5'}>
-          <span className={'mb-3 block text-xs text-gray-400'}>{'Sell'}</span>
-          <span className={'flex items-center justify-between gap-3'}>
-            <input
-              aria-label={'Swap amount'}
-              inputMode={'decimal'}
-              value={amount}
-              onChange={(event) => setAmount(event.target.value.replace(/[^0-9.]/g, ''))}
-              className={'min-w-0 flex-1 bg-transparent text-3xl font-medium tracking-[-0.03em] outline-none'}
-            />
-            <AssetSelector asset={sellAsset} onClick={() => setSellAsset(cycleAsset(sellAsset, buyAsset))} />
-          </span>
-          <span className={'mt-3 block text-xs text-gray-500'}>
-            {`$${(parsedAmount * assets[sellAsset].usd).toLocaleString('en-US', { maximumFractionDigits: 2 })}`}
-          </span>
-        </label>
-
-        <div className={'relative flex justify-center'}>
-          <button
-            type={'button'}
-            aria-label={'Switch assets'}
-            onClick={switchAssets}
-            className={
-              'absolute -top-5 z-10 flex size-10 items-center justify-center rounded-xl border-4 border-[#0A0A14] bg-[#151522] text-[#A9C0FF] shadow-xl transition-transform hover:rotate-180'
-            }
-          >
-            {'⇅'}
-          </button>
-        </div>
-
-        <div className={'rounded-[20px] border border-white/[0.06] bg-[#151522] p-4 sm:p-5'}>
-          <div className={'mb-3 text-xs text-gray-400'}>{'Buy'}</div>
-          <div className={'flex items-center justify-between gap-3'}>
-            <span className={'min-w-0 flex-1 truncate text-3xl font-medium tracking-[-0.03em]'}>
-              {output.toLocaleString('en-US', { maximumFractionDigits: buyAsset === 'USDC' ? 2 : 6 })}
-            </span>
-            <AssetSelector asset={buyAsset} onClick={() => setBuyAsset(cycleAsset(buyAsset, sellAsset))} />
-          </div>
-          <div className={'mt-3 text-xs text-gray-500'}>
-            {`$${(output * assets[buyAsset].usd).toLocaleString('en-US', { maximumFractionDigits: 2 })}`}
-          </div>
-        </div>
-        <div className={'flex items-center justify-between px-1 pt-2 text-xs text-gray-500'}>
-          <span>{'Est. network fee'}</span>
-          <span>{'$1.42'}</span>
-        </div>
-      </div>
-      <button
-        type={'button'}
-        onClick={() => setIsConnected(true)}
-        className={
-          'mx-4 mb-4 w-[calc(100%-2rem)] rounded-2xl bg-blue py-4 text-sm font-semibold transition-colors hover:bg-blueHover sm:mx-5 sm:mb-5 sm:w-[calc(100%-2.5rem)]'
-        }
-      >
-        {isConnected ? 'Review swap' : 'Connect Wallet'}
-      </button>
-      <div className={'border-t border-white/[0.08] py-4 text-center text-[11px] text-gray-600'}>
-        {'Powered by '}
-        <span className={'font-semibold text-blue'}>{'ShapeShift'}</span>
-      </div>
+      <iframe
+        src={'https://widget.shapeshift.com/'}
+        title={'ShapeShift Widget'}
+        width={WIDGET_CARD_WIDTH}
+        height={WIDGET_IFRAME_HEIGHT}
+        allow={'clipboard-write'}
+        style={{
+          border: 0,
+          transform: `scale(${scale}) translateY(${-WIDGET_CROP_TOP}px)`,
+          transformOrigin: 'top left',
+        }}
+      />
     </div>
   )
 }
 
 export function DevelopersHero(): ReactNode {
+  const shouldReduceMotion = useReducedMotion()
+
   return (
     <section className={'relative overflow-hidden pb-16 pt-5 lg:pb-20 lg:pt-4'}>
       <div
         className={'pointer-events-none absolute right-[8%] top-24 size-[600px] rounded-full bg-blue/14 blur-[150px]'}
       />
 
-      <div className={'container relative grid items-start gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12'}>
+      <div className={'container relative grid min-w-0 items-center gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12'}>
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className={'lg:pt-8'}
+          transition={{ duration: 0.6 }}
+          className={'min-w-0 lg:pt-4'}
         >
-          <div
+          <SectionEyebrow variant={'pill'}>{'The ShapeShift Widget'}</SectionEyebrow>
+          <h1
             className={
-              'mb-6 inline-flex items-center gap-2 rounded-full bg-blue/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#B5C8FF]'
+              'mb-6 max-w-full text-[46px] font-bold leading-[.98] tracking-[-0.05em] sm:text-[60px] lg:text-[68px]'
             }
           >
-            <span className={'size-2 rounded-full bg-[#70E1B1] shadow-[0_0_12px_#70E1B1]'} />
-            {'ShapeShift Widget + API'}
-          </div>
-          <h1 className={'mb-7 text-[50px] font-bold leading-[.98] tracking-[-0.05em] sm:text-[64px] lg:text-[76px]'}>
-            {'Multichain swaps, '}
+            {'Add multichain swaps '}
             <span className={'bg-gradient-to-r from-[#BFD0FF] to-blue bg-clip-text text-transparent'}>
-              {'ready to ship.'}
+              {'in minutes.'}
             </span>
           </h1>
-          <p className={'mb-9 max-w-[620px] text-lg leading-relaxed text-secondary sm:text-xl'}>
+          <p className={'mb-7 max-w-[600px] text-lg leading-relaxed text-secondary sm:text-xl'}>
             {
-              'Embed the Widget in minutes or build your own experience with the API. ShapeShift handles routing and maintenance—you own the experience and the revenue.'
+              'Give your users a complete, customizable swap experience across 48+ chains—without building or maintaining the routing infrastructure.'
             }
           </p>
           <div className={'mb-8 flex flex-col gap-3 sm:flex-row'}>
-            <Button href={'#widget'} variant={'blue'} title={'Explore the Widget'} hasArrow />
-            <Button href={'#api'} variant={'white'} title={'Explore the API'} />
+            <Button href={'https://widget.shapeshift.com/'} variant={'blue'} title={'Try the Widget'} hasArrow />
+            <Button href={'https://discord.gg/shapeshift'} variant={'white'} title={'Talk with us'} />
           </div>
-          <div className={'flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-400'}>
-            {['48+ chains', 'Non-custodial', 'Revenue share'].map((benefit) => (
-              <span key={benefit} className={'flex items-center gap-2'}>
-                <span className={'size-1.5 rounded-full bg-blue'} />
+          <div className={'flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-400'}>
+            {['48+ chains', '18 routing protocols', 'Partner revenue'].map((benefit, index) => (
+              <span key={benefit} className={'flex items-center'}>
+                {index > 0 ? <span className={'mr-5 text-gray-700'}>{'/'}</span> : null}
                 {benefit}
               </span>
             ))}
           </div>
+          <a
+            href={'#api'}
+            className={'mt-6 inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-white'}
+          >
+            {'Need a custom integration? Explore the API'}
+            <span aria-hidden={'true'}>{'→'}</span>
+          </a>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
+          initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, duration: 0.6 }}
           className={
-            'relative mx-auto flex min-h-[720px] w-full max-w-[720px] items-center justify-center px-2 py-20 lg:min-h-[610px] lg:px-[136px] lg:py-0'
+            'relative mx-auto flex min-h-[560px] min-w-0 w-full max-w-[600px] items-center justify-center px-2 py-10 lg:min-h-[540px] lg:px-10 lg:py-0'
           }
         >
-          <div className={'pointer-events-none absolute inset-[10%] rounded-full bg-blue/16 blur-[80px]'} />
-          <InteractiveSwapper />
+          <div
+            className={
+              'pointer-events-none absolute -inset-x-[36%] inset-y-1 bg-[radial-gradient(ellipse_at_50%_40%,rgba(56,97,251,.38),rgba(13,17,29,.7)_52%,transparent_84%)]'
+            }
+          />
+          <div
+            className={'pointer-events-none absolute -inset-x-[36%] inset-y-1 opacity-30'}
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(91,123,255,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(91,123,255,.15) 1px, transparent 1px)',
+              backgroundSize: '40px 40px',
+              maskImage: 'linear-gradient(to bottom, black, transparent 86%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black, transparent 86%)',
+            }}
+          />
+          <div className={'pointer-events-none absolute inset-[10%] rounded-full bg-blue/25 blur-[90px]'} />
 
           <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
-            className={
-              'absolute left-2 top-3 z-30 w-[142px] -rotate-2 rounded-2xl border border-white/10 bg-[#111827] p-3.5 shadow-2xl sm:left-8 lg:left-0 lg:top-[14%] lg:w-[150px] lg:p-4'
-            }
+            animate={shouldReduceMotion ? undefined : { rotate: 360 }}
+            transition={shouldReduceMotion ? undefined : { duration: 22, repeat: Infinity, ease: 'linear' }}
+            className={'pointer-events-none absolute inset-[7%] rounded-full border border-dashed border-blue/20'}
           >
-            <div className={'mb-2 font-mono text-[11px] text-gray-400'}>{'POST /swap/quote'}</div>
-            <div className={'font-mono text-xs font-semibold text-[#70E1B1]'}>{'200 · route ready'}</div>
+            <span className={'absolute -right-1 top-1/2 size-2.5 rounded-full bg-mint shadow-[0_0_14px_#70E1B1]'} />
           </motion.div>
-          <motion.div
-            animate={{ y: [0, 9, 0] }}
-            transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
-            className={
-              'absolute bottom-3 right-2 z-30 w-[142px] rotate-2 rounded-2xl border border-white/10 bg-[#111827] p-3.5 shadow-2xl sm:right-8 lg:bottom-[14%] lg:right-0 lg:w-[150px] lg:p-4'
-            }
-          >
-            <div className={'mb-1 text-[11px] uppercase tracking-[0.12em] text-gray-400'}>{'Partner earnings'}</div>
-            <div className={'text-xl font-semibold text-[#A9C0FF]'}>{'+ 25 bps'}</div>
-          </motion.div>
+          <RealWidgetEmbed />
         </motion.div>
       </div>
     </section>
