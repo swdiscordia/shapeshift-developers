@@ -125,7 +125,7 @@ function LiveThemeSwitcher(): ReactNode {
           aria-hidden={'true'}
           animate={shouldReduceMotion ? undefined : { rotate: 360 }}
           transition={shouldReduceMotion ? undefined : { duration: 18, repeat: Infinity, ease: 'linear' }}
-          className={'pointer-events-none absolute inset-[3%] rounded-full opacity-90 blur-[2px]'}
+          className={'pointer-events-none absolute inset-[3%] rounded-full opacity-75 blur-[1px]'}
           style={{
             background:
               'conic-gradient(from 15deg, #3861fb, #06b6d4, #10b981, #bea989, #f97316, #f43f5e, #a855f7, #3861fb)',
@@ -140,7 +140,7 @@ function LiveThemeSwitcher(): ReactNode {
         <div
           aria-hidden={'true'}
           className={
-            'pointer-events-none absolute inset-[5%] rounded-full opacity-40 blur-[42px] transition-colors duration-700'
+            'pointer-events-none absolute inset-[5%] rounded-full opacity-25 blur-[42px] transition-colors duration-700'
           }
           style={{ backgroundColor: preset.accent }}
         />
@@ -184,18 +184,7 @@ export function DevelopersWidgetSection(): ReactNode {
         <p className={'max-w-[680px] text-lg leading-relaxed text-secondary'}>{widget.description}</p>
       </div>
 
-      <div
-        className={
-          'rounded-[32px] border border-white/[0.06] bg-gradient-to-b from-[#12141f] to-[#0a0b11] px-6 py-10 sm:px-8 sm:py-12 lg:py-14'
-        }
-      >
-        <div className={'mx-auto mb-9 max-w-[440px] text-center'}>
-          <h3 className={'mb-2 text-2xl font-semibold tracking-[-0.02em]'}>{'Make it feel native to your product.'}</h3>
-          <p className={'text-sm leading-relaxed text-gray-400 sm:text-base'}>
-            {'Pick a preset. The widget updates live, right here.'}
-          </p>
-        </div>
-
+      <div className={'border-y border-white/[0.08] py-10 sm:py-12 lg:py-14'}>
         <LiveThemeSwitcher />
 
         <div className={'mt-10 flex justify-center'}>

@@ -155,7 +155,7 @@ export function DevelopersHero(): ReactNode {
                   }
             }
             transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-            className={'pointer-events-none absolute inset-[7%] opacity-55 blur-[58px] transition-colors duration-1000'}
+            className={'pointer-events-none absolute inset-[7%] opacity-40 blur-[64px] transition-colors duration-1000'}
             style={{
               background: `linear-gradient(135deg, ${palette[paletteIndex]}aa, #9D63EC77 48%, #70E1B166)`,
             }}
