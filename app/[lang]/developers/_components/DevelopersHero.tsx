@@ -138,24 +138,6 @@ export function DevelopersHero(): ReactNode {
             'relative mx-auto flex min-h-[560px] min-w-0 w-full max-w-[660px] items-center justify-center px-2 py-10 lg:min-h-[600px] lg:px-10 lg:py-0'
           }
         >
-          <div
-            className={
-              'pointer-events-none absolute -inset-x-[42%] inset-y-[-8%] rounded-full opacity-70 blur-[70px] transition-colors duration-1000'
-            }
-            style={{
-              background: `radial-gradient(circle, ${palette[paletteIndex]}55 0%, transparent 68%)`,
-            }}
-          />
-          <div
-            className={'pointer-events-none absolute -inset-x-[36%] inset-y-1 opacity-30'}
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(91,123,255,.15) 1px, transparent 1px), linear-gradient(90deg, rgba(91,123,255,.15) 1px, transparent 1px)',
-              backgroundSize: '40px 40px',
-              maskImage: 'linear-gradient(to bottom, black, transparent 86%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, black, transparent 86%)',
-            }}
-          />
           <motion.div
             aria-hidden={'true'}
             animate={
@@ -167,37 +149,17 @@ export function DevelopersHero(): ReactNode {
                       '58% 42% 38% 62% / 39% 61% 42% 58%',
                       '42% 58% 61% 39% / 46% 38% 62% 54%',
                     ],
-                    rotate: [0, 8, 0],
-                    scale: [1, 1.04, 1],
+                    x: ['-3%', '4%', '-3%'],
+                    y: ['2%', '-3%', '2%'],
+                    scale: [0.96, 1.06, 0.96],
                   }
             }
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-            className={'pointer-events-none absolute inset-[3%] opacity-45 blur-[34px] transition-colors duration-1000'}
+            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+            className={'pointer-events-none absolute inset-[7%] opacity-55 blur-[58px] transition-colors duration-1000'}
             style={{
-              background: `conic-gradient(from 130deg, ${palette[paletteIndex]}cc, #9D63EC88, #70E1B188, ${palette[paletteIndex]}cc)`,
+              background: `linear-gradient(135deg, ${palette[paletteIndex]}aa, #9D63EC77 48%, #70E1B166)`,
             }}
           />
-
-          <div className={'pointer-events-none absolute inset-[7%] rounded-full border border-white/[0.06]'} />
-
-          <motion.div
-            animate={shouldReduceMotion ? undefined : { rotate: 360 }}
-            transition={shouldReduceMotion ? undefined : { duration: 28, repeat: Infinity, ease: 'linear' }}
-            className={'pointer-events-none absolute inset-[2%] rounded-full'}
-          >
-            {palette.map((color, index) => (
-              <span
-                key={color}
-                className={'absolute size-3 rounded-full blur-[1px]'}
-                style={{
-                  backgroundColor: color,
-                  boxShadow: `0 0 24px ${color}`,
-                  left: `${50 + Math.cos((index / palette.length) * Math.PI * 2) * 49}%`,
-                  top: `${50 + Math.sin((index / palette.length) * Math.PI * 2) * 49}%`,
-                }}
-              />
-            ))}
-          </motion.div>
           <RealWidgetEmbed />
         </motion.div>
       </div>

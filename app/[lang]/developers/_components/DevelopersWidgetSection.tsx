@@ -1,7 +1,8 @@
 'use client'
 
+import { motion, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from '@/app/[lang]/_components/Button'
 import { IconFox } from '@/app/[lang]/_icons/IconFox'
@@ -108,11 +109,45 @@ function LivePreview({ preset }: { preset: TPreset }): ReactNode {
 
 function LiveThemeSwitcher(): ReactNode {
   const [activeIndex, setActiveIndex] = useState(0)
+  const shouldReduceMotion = useReducedMotion()
   const preset = presets[activeIndex]
+
+  useEffect(() => {
+    if (shouldReduceMotion) return undefined
+    const interval = window.setInterval(() => setActiveIndex((index) => (index + 1) % presets.length), 2600)
+    return () => window.clearInterval(interval)
+  }, [shouldReduceMotion])
 
   return (
     <div className={'flex flex-col items-center gap-7'}>
-      <LivePreview preset={preset} />
+      <div className={'relative flex aspect-square w-full max-w-[520px] items-center justify-center'}>
+        <motion.div
+          aria-hidden={'true'}
+          animate={shouldReduceMotion ? undefined : { rotate: 360 }}
+          transition={shouldReduceMotion ? undefined : { duration: 18, repeat: Infinity, ease: 'linear' }}
+          className={'pointer-events-none absolute inset-[2%] rounded-full opacity-90 blur-[2px]'}
+          style={{
+            background:
+              'conic-gradient(from 15deg, #3861fb, #06b6d4, #10b981, #bea989, #f97316, #f43f5e, #a855f7, #3861fb)',
+          }}
+        />
+        <div
+          aria-hidden={'true'}
+          className={
+            'pointer-events-none absolute inset-[10%] rounded-full bg-[#0a0b11] shadow-[inset_0_0_70px_rgba(255,255,255,.04)]'
+          }
+        />
+        <div
+          aria-hidden={'true'}
+          className={
+            'pointer-events-none absolute inset-[5%] rounded-full opacity-40 blur-[42px] transition-colors duration-700'
+          }
+          style={{ backgroundColor: preset.accent }}
+        />
+        <div className={'relative z-10 w-[76%] max-w-[320px]'}>
+          <LivePreview preset={preset} />
+        </div>
+      </div>
       <div className={'flex flex-col items-center gap-3'}>
         <div className={'flex flex-nowrap justify-center gap-2 sm:gap-3'}>
           {presets.map((item, index) => (
