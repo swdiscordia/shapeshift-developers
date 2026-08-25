@@ -1,7 +1,6 @@
 import Image from 'next/image'
 
 import { Button } from '@/app/[lang]/_components/Button'
-import { developerDocsUrl } from '@/app/[lang]/_utils/constants'
 import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
 
 import type { ReactNode } from 'react'
@@ -10,10 +9,10 @@ export function DevelopersCta(): ReactNode {
   const { cta } = DEVELOPERS_DICT.page
 
   return (
-    <section className={'container pb-20 pt-20 lg:pt-24'}>
+    <section className={'container pb-14 pt-12 lg:pb-16 lg:pt-14'}>
       <div
         className={
-          'relative isolate min-h-[420px] overflow-hidden rounded-[20px] border border-stroke p-8 text-center sm:p-12 lg:min-h-[480px] lg:p-16'
+          'relative isolate min-h-[300px] overflow-hidden rounded-[20px] border border-stroke p-8 text-center sm:p-10 lg:min-h-[340px] lg:p-12'
         }
       >
         <Image
@@ -41,14 +40,14 @@ export function DevelopersCta(): ReactNode {
             'pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(10,11,17,.55),rgba(10,11,17,.1)_45%,transparent_75%)]'
           }
         />
-        <div className={'relative flex h-full min-h-[356px] flex-col justify-center lg:min-h-[416px]'}>
+        <div className={'relative flex h-full min-h-[236px] flex-col justify-center lg:min-h-[276px]'}>
           <h2 className={'mb-4 text-[32px] font-bold leading-tight tracking-[-0.02em] sm:text-4xl lg:text-5xl'}>
             {cta.title}
           </h2>
-          <p className={'mb-10 text-lg text-white'}>{cta.description}</p>
+          <p className={'mb-8 text-lg text-white'}>{cta.description}</p>
           <div className={'flex flex-wrap items-center justify-center gap-3.5'}>
             <Button
-              href={developerDocsUrl}
+              href={'https://widget.shapeshift.com/'}
               variant={'blue'}
               title={cta.ctaPrimary}
               hasArrow

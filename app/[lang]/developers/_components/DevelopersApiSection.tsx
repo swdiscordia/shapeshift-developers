@@ -113,9 +113,9 @@ function TypedCodePanel({ activeTab }: { activeTab: number }): ReactNode {
           window.clearInterval(interval)
           return value
         }
-        return Math.min(value + 3, source.length)
+        return Math.min(value + 12, source.length)
       })
-    }, 18)
+    }, 12)
 
     return () => window.clearInterval(interval)
   }, [activeTab, isInView, shouldReduceMotion, source.length])
@@ -145,7 +145,7 @@ function TypedCodePanel({ activeTab }: { activeTab: number }): ReactNode {
       </div>
       <pre
         className={
-          'min-h-[430px] overflow-x-auto whitespace-pre p-7 font-mono text-[12.5px] leading-[1.75] text-[#c9d1d9]'
+          'min-h-[390px] overflow-x-auto whitespace-pre p-6 font-mono text-[12.5px] leading-[1.7] text-[#c9d1d9] sm:p-7'
         }
       >
         {source.slice(0, visibleCharacters)}
@@ -167,11 +167,11 @@ export function DevelopersApiSection(): ReactNode {
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <section id={'api'} className={'container scroll-mt-28 pt-16 lg:scroll-mt-32 lg:pt-20'}>
-      <h2 className={'mb-4 text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>{api.title}</h2>
-      <p className={'mb-14 max-w-[640px] text-lg leading-relaxed text-secondary'}>{api.description}</p>
+    <section id={'api'} className={'container scroll-mt-28 pt-14 lg:scroll-mt-32 lg:pt-16'}>
+      <h2 className={'mb-4 text-[38px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[50px]'}>{api.title}</h2>
+      <p className={'mb-8 max-w-[640px] text-base leading-relaxed text-secondary sm:text-lg'}>{api.description}</p>
 
-      <div className={'grid grid-cols-1 items-start gap-16 lg:grid-cols-[1fr_1.1fr]'}>
+      <div className={'grid grid-cols-1 items-start gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14'}>
         <div>
           {api.endpoints.map((endpoint, index) => (
             <button

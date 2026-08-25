@@ -112,7 +112,9 @@ export function middleware(request: NextRequest): NextResponse {
   const pathname = request.nextUrl.pathname
   const hostname = request.headers.get('host') || ''
 
-  // Generate a nonce for CSP
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  // Production uses a per-request nonce. Development needs eval/inline scripts for the Next.js
+  // runtime; omitting the nonce there also avoids a browser-normalized nonce hydration mismatch.
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
   // Check for language subdomain
@@ -149,7 +151,7 @@ export function middleware(request: NextRequest): NextResponse {
 
   // Create response with locale headers and nonce
   const headers = createLocaleHeaders(request.headers, pathname, locale)
-  headers.set('x-nonce', nonce)
+  if (!isDevelopment) headers.set('x-nonce', nonce)
   const response = NextResponse.next({ headers })
 
   // Only set locale cookie if user explicitly changed language (cookie already exists)
@@ -159,7 +161,10 @@ export function middleware(request: NextRequest): NextResponse {
   }
 
   // Set the CSP header with the nonce
-  const cspHeader = `default-src 'self'; script-src 'self' 'nonce-${nonce}' https://api.hypelab.com https://app.chatwoot.com https://widget.chatwoot.com https://cdn.weglot.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.weglot.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; media-src 'self' https:; connect-src 'self' https://api.hypelab.com https://app.chatwoot.com https://widget.chatwoot.com ${strapiHostname} https://cdn.weglot.com https://api.weglot.com https://cdn-api-weglot.com wss://app.chatwoot.com  https://api.thorchain.shapeshift.com; frame-src 'self' https://widget.chatwoot.com https://app.chatwoot.com https://widget.shapeshift.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://app.chatwoot.com; frame-ancestors 'self'; upgrade-insecure-requests;`
+  const scriptPolicy = isDevelopment
+    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.hypelab.com https://app.chatwoot.com https://widget.chatwoot.com https://cdn.weglot.com"
+    : `script-src 'self' 'nonce-${nonce}' https://api.hypelab.com https://app.chatwoot.com https://widget.chatwoot.com https://cdn.weglot.com`
+  const cspHeader = `default-src 'self'; ${scriptPolicy}; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.weglot.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; media-src 'self' https:; connect-src 'self' https://api.hypelab.com https://app.chatwoot.com https://widget.chatwoot.com ${strapiHostname} https://cdn.weglot.com https://api.weglot.com https://cdn-api-weglot.com wss://app.chatwoot.com  https://api.thorchain.shapeshift.com; frame-src 'self' https://widget.chatwoot.com https://app.chatwoot.com https://widget.shapeshift.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://app.chatwoot.com; frame-ancestors 'self'; upgrade-insecure-requests;`
   response.headers.set('Content-Security-Policy', cspHeader)
 
   // Handle locale routing

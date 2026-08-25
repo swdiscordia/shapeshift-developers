@@ -7,9 +7,9 @@ export const DEVELOPERS_DICT = {
   },
   page: {
     widget: {
-      title: 'A complete swap experience, ready to embed',
+      title: 'Your brand. Your Widget.',
       description:
-        'Match your product, choose the default assets, and ship multichain swaps without building the interface or routing logic.',
+        'Choose a theme, set the default assets, and preview a swap experience that feels built into your product.',
       features: [
         {
           tag: '48+ chains',
@@ -117,9 +117,9 @@ export const DEVELOPERS_DICT = {
       ],
     },
     cta: {
-      title: 'Ship multichain swaps on your project',
-      description: 'One iframe or one API. Either way, you earn on every swap.',
-      ctaPrimary: 'Start building',
+      title: 'Make swaps feel native to your product',
+      description: 'Configure the Widget, preview your theme, and take the complete flow into production.',
+      ctaPrimary: 'Configure the Widget',
       ctaSecondary: 'Talk with us',
     },
   },

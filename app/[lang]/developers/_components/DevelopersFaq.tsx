@@ -1,6 +1,6 @@
 'use client'
 
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useState } from 'react'
 
 import { AnimatedPlusMinusIcon } from '@/app/[lang]/_components/QuestionSection'
@@ -13,29 +13,41 @@ import type { ReactNode } from 'react'
 // plain string, so the chains question can end in a real button instead of a raw URL.
 function FaqItem({ question, answer }: { question: string; answer: ReactNode }): ReactNode {
   const [isOpen, setIsOpen] = useState(false)
+  const shouldReduceMotion = useReducedMotion()
 
   return (
-    <div className={'group rounded-2xl bg-secondBg hover:bg-secondHoverBg'}>
-      <div className={'flex cursor-pointer items-center justify-between px-10 py-8'} onClick={() => setIsOpen(!isOpen)}>
-        <div className={'text-2xl'}>{question}</div>
+    <div className={'border-t border-white/10 last:border-b'}>
+      <button
+        type={'button'}
+        aria-expanded={isOpen}
+        className={'group flex w-full items-center justify-between gap-6 py-5 text-left focus-visible:outline-none'}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className={'text-lg font-medium tracking-[-0.015em] text-white sm:text-xl'}>{question}</span>
         <div
           className={
-            'flex size-12 min-w-[48px] items-center justify-center rounded-full bg-white/10 transition-all duration-300 group-hover:scale-[1.16] group-hover:bg-blueHover'
+            'flex size-9 min-w-9 items-center justify-center text-gray-500 transition-colors group-hover:text-white group-focus-visible:text-white'
           }
         >
-          <AnimatedPlusMinusIcon isOpen={isOpen} />
+          {shouldReduceMotion ? (
+            <span aria-hidden={'true'} className={'text-2xl leading-none'}>
+              {isOpen ? '−' : '+'}
+            </span>
+          ) : (
+            <AnimatedPlusMinusIcon isOpen={isOpen} />
+          )}
         </div>
-      </div>
-      <AnimatePresence>
+      </button>
+      <AnimatePresence initial={!shouldReduceMotion}>
         {isOpen ? (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.3, ease: 'easeInOut' }}
             className={'overflow-hidden'}
           >
-            <div className={'rounded-2xl px-10 pb-6 text-gray-500'}>{answer}</div>
+            <div className={'max-w-[760px] pb-6 pr-12 text-[15px] leading-relaxed text-gray-400'}>{answer}</div>
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -47,11 +59,16 @@ export function DevelopersFaq(): ReactNode {
   const { items } = DEVELOPERS_DICT.page.faq
 
   return (
-    <div className={'container mx-auto max-w-[900px]'}>
-      <h2 className={'mb-12 text-center text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>
-        {DEVELOPERS_DICT.page.faq.title}
-      </h2>
-      <div className={'flex flex-col gap-3'}>
+    <div className={'container grid gap-6 lg:grid-cols-[.65fr_1.35fr] lg:gap-16'}>
+      <div>
+        <h2 className={'max-w-[360px] text-[34px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[42px]'}>
+          {DEVELOPERS_DICT.page.faq.title}
+        </h2>
+        <p className={'mt-4 max-w-[360px] text-sm leading-relaxed text-gray-500'}>
+          {'Straight answers for product and engineering teams evaluating the integration.'}
+        </p>
+      </div>
+      <div className={'min-w-0'}>
         {items.map((item) => (
           <FaqItem
             key={item.question}

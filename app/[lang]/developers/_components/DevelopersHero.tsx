@@ -10,26 +10,8 @@ import { IconSettings } from '@/app/[lang]/_icons/IconSettings'
 
 import type { ReactNode } from 'react'
 
-// The real widget.shapeshift.com card, measured directly against the live page's own DOM
-// (the .ssw-widget node) across every real state, not just the default one:
-//   - disconnected: 420x507 — what effectively every fresh visitor sees
-//   - a wallet already connected (extra "Receive address" row): ~571
-//   - an amount entered with a live quote showing (route, fee, Swap button): ~680
-// A single static crop height can't fit all three without either wasting ~170px of space in
-// the default state or clipping the actual swap flow — so this isn't static. It starts at the
-// COMPACT height (zero dead space for the common case), then grows once to the EXPANDED height
-// the moment the visitor actually interacts with the widget, detected via the standard
-// cross-origin trick of watching focus move into the iframe (window blurs and
-// document.activeElement becomes the iframe element) — no content-reading required, and no
-// false positives from switching browser tabs/apps, which don't hand focus to this iframe.
-//
-// The iframe's own `height` ATTRIBUTE is kept permanently fixed at the expanded size, never
-// re-set based on state — only the OUTER wrapper's CSS height (a plain overflow-hidden clip)
-// changes. Verified directly that doing it the other way round breaks real interaction: resizing
-// the iframe's height attribute forces a real viewport resize inside the widget's own document,
-// and if that happens on the same tick as a click (e.g. opening the wallet-connect modal), the
-// modal never opens at all — this two-height split avoids ever touching the iframe's internal
-// viewport after its first render.
+// The public widget includes its configurator above the swap card. The fixed viewport keeps the
+// product itself visible in the hero while preserving the real, interactive implementation.
 const WIDGET_CARD_WIDTH = 420
 const WIDGET_COMPACT_HEIGHT = 507
 const WIDGET_EXPANDED_HEIGHT = 740
@@ -56,26 +38,11 @@ function RealWidgetEmbed(): ReactNode {
     return () => observer.disconnect()
   }, [])
 
-  // The iframe's own `load` event is not reliable here: if the browser resolves it before
-  // React finishes attaching the handler (e.g. an instant cache hit), the event fires and is
-  // simply never seen, leaving isReady stuck false forever — the real widget underneath is
-  // fine, but permanently hidden behind this non-interactive loading placeholder. A flat timer
-  // started on mount guarantees the swap to the real iframe happens regardless of whether
-  // `load` was actually observed.
   useEffect(() => {
-    const fallback = window.setTimeout(() => setIsReady(true), 2600)
+    const fallback = window.setTimeout(() => setIsReady(true), 1200)
     return () => window.clearTimeout(fallback)
   }, [])
 
-  // Focus alone isn't enough of a signal: an iframe sits in the normal tab order, so a keyboard
-  // user tabbing through the page (never intending to touch the widget at all) lands on it too,
-  // and would trigger the same window-blur — expanding the card to a mostly-empty 740px box for
-  // someone who never asked for it (verified: 15 plain Tab presses, no click, reproduced exactly
-  // that). A click that starts INSIDE the iframe never fires a pointerdown our outer page can see
-  // at all (it's a separate document), so the tell isn't "did we see a pointer press" — it's "did
-  // we see a keydown on OUR OWN page immediately before losing focus". Tab-driven focus transfer
-  // always follows a keydown on the outer document (the previously-focused element was out here);
-  // a genuine click into the iframe never does.
   useEffect(() => {
     let lastKeyDownAt = 0
 
@@ -111,10 +78,7 @@ function RealWidgetEmbed(): ReactNode {
         height={WIDGET_IFRAME_HEIGHT}
         allow={'clipboard-write'}
         loading={'eager'}
-        // This is meant to read as a fixed, cropped snapshot of the widget (the whole scale +
-        // translateY illusion below depends on that), not a scrollable panel — without this,
-        // the iframe's own document can scroll internally on wheel/touch, which both breaks
-        // that illusion and can trap the page's own scroll while the cursor is over it.
+        onLoad={() => setIsReady(true)}
         scrolling={'no'}
         className={'transition-opacity duration-300'}
         style={{
@@ -127,7 +91,10 @@ function RealWidgetEmbed(): ReactNode {
       <div
         aria-hidden={isReady}
         className={'absolute inset-0 z-10 overflow-hidden bg-[#0A0A14] transition-opacity duration-300'}
-        style={{ opacity: isReady ? 0 : 1, pointerEvents: isReady ? 'none' : 'auto' }}
+        style={{
+          opacity: isReady ? 0 : 1,
+          pointerEvents: isReady ? 'none' : 'auto',
+        }}
       >
         <div
           className={'h-[507px] w-[420px] bg-[#0A0A14]'}
@@ -162,7 +129,7 @@ function RealWidgetEmbed(): ReactNode {
               <div className={'mt-3 flex items-center justify-between'}>
                 <span className={'text-2xl font-semibold text-white'}>{'0'}</span>
                 <span className={'flex items-center gap-3 rounded-xl bg-[#080811] px-4 py-3'}>
-                  <Image src={'/widget/usdc_icon.png'} alt={''} width={28} height={28} />
+                  <Image src={'/widget/usdc_icon.png'} alt={''} width={41} height={40} className={'size-7'} />
                   <span>
                     <strong className={'block text-sm text-white'}>{'USDC'}</strong>
                     <span className={'text-[11px] text-gray-500'}>{'Ethereum'}</span>
@@ -194,20 +161,11 @@ function RealWidgetEmbed(): ReactNode {
   )
 }
 
-// Alpha baked directly into each stop (as an 8-digit hex) rather than appended afterwards:
-// animate() interpolates colors as rgba() internally, so concatenating a literal 'aa' suffix
-// onto its output produces something like 'rgba(56, 111, 249, 1)aa' — invalid CSS that the
-// browser silently drops, which is why the glow previously looked frozen instead of fading.
 const PALETTE = ['#386FF9aa', '#9D63ECaa', '#70E1B1aa', '#06B6D4aa']
 
 export function DevelopersHero(): ReactNode {
   const shouldReduceMotion = useReducedMotion()
   const glowRef = useRef<HTMLDivElement>(null)
-  // A single motion value smoothly tweened through the palette (closing the loop back to the
-  // first color) so the glow's hue drifts continuously — the previous version snapped the
-  // `background` gradient string straight from one color to the next every few seconds, which
-  // a CSS `transition-colors` can't smooth (it doesn't cover the `background` shorthand), so it
-  // looked like a hard cut instead of a fade.
   const glowAccent = useMotionValue(PALETTE[0])
 
   useEffect(() => {
@@ -218,8 +176,6 @@ export function DevelopersHero(): ReactNode {
       ease: 'linear',
     })
 
-    // Pauses the color loop once the hero scrolls out of view instead of tweening forever in
-    // the background for as long as the tab stays open.
     const el = glowRef.current
     const observer = el
       ? new IntersectionObserver(([entry]) => {
@@ -246,14 +202,12 @@ export function DevelopersHero(): ReactNode {
               'mb-6 max-w-full text-[46px] font-bold leading-[.98] tracking-[-0.05em] sm:text-[60px] lg:text-[68px]'
             }
           >
-            {'Add multichain swaps '}
-            <span className={'bg-gradient-to-r from-[#BFD0FF] to-blue bg-clip-text text-transparent'}>
-              {'in minutes.'}
-            </span>
+            {'Preview multichain swaps in minutes. '}
+            <span>{'Ship on your timeline.'}</span>
           </h1>
           <p className={'mb-7 max-w-[600px] text-lg leading-relaxed text-secondary sm:text-xl'}>
             {
-              'Give your users a complete, customizable swap experience across 48+ chains. ShapeShift handles the routing infrastructure.'
+              'Configure the Widget in minutes, then launch after your wallet flow, supported assets, and QA are production-ready. ShapeShift handles the routing infrastructure.'
             }
           </p>
           <div className={'mb-8 flex flex-col gap-3 sm:flex-row'}>

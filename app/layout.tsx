@@ -48,12 +48,12 @@ export default async function RootLayout({ children }: { children: ReactNode }):
   const weglotLanguages = SUPPORTED_LANGUAGES.map((lang) => lang.weglotCode).join(',')
   // Get nonce from headers
   const headersList = await headers()
-  const nonce = headersList.get('x-nonce') || undefined
+  const nonce = process.env.NODE_ENV === 'development' ? undefined : headersList.get('x-nonce') || undefined
 
   return (
-    <html lang={'en'}>
-      <head>
-        <Script id={'hypelab'} strategy={'beforeInteractive'} nonce={nonce}>
+    <html lang={'en'} suppressHydrationWarning>
+      <head suppressHydrationWarning>
+        <Script id={'hypelab'} strategy={'beforeInteractive'} nonce={nonce} suppressHydrationWarning>
           {`!(function(h,y,p,e,l,a,b){
     ((window.__hype_analytics=[]),(window.__hype_wids=[])),
     (window.HypeLabAnalytics={
@@ -75,8 +75,15 @@ export default async function RootLayout({ children }: { children: ReactNode }):
           src={'https://cdn.weglot.com/weglot.min.js'}
           crossOrigin={'anonymous'}
           nonce={nonce}
+          suppressHydrationWarning
         />
-        <Script strategy={'afterInteractive'} id={'weglot'} crossOrigin={'anonymous'} nonce={nonce}>
+        <Script
+          strategy={'afterInteractive'}
+          id={'weglot'}
+          crossOrigin={'anonymous'}
+          nonce={nonce}
+          suppressHydrationWarning
+        >
           {`
 						if (typeof Weglot !== 'undefined') {
 							try {
@@ -104,6 +111,7 @@ export default async function RootLayout({ children }: { children: ReactNode }):
           // eslint-disable-next-line @typescript-eslint/naming-convention
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
           nonce={nonce}
+          suppressHydrationWarning
         />
         <Script
           id={'organization-schema'}
@@ -113,6 +121,7 @@ export default async function RootLayout({ children }: { children: ReactNode }):
             __html: JSON.stringify(organizationSchema),
           }}
           nonce={nonce}
+          suppressHydrationWarning
         />
       </head>
       <body className={'relative min-h-screen overflow-x-hidden bg-bg px-4 pb-4 text-white'}>

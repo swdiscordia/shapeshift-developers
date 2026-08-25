@@ -33,13 +33,13 @@ const RING_GRADIENT =
   presets.map((item, index) => `${item.accent} ${index * SEGMENT_DEG}deg`).join(', ') +
   `, ${presets[0].accent} 360deg)`
 
-// The colored ring is built from inset-[12%] (inner edge, radius = 0.76 of the container's
-// half-width) to inset-[3%] (outer edge, radius = 0.94) — inset-[X%] on a square of size S
+// The visual ring runs from inset-[11.5%] to inset-[4%]. The hit area is slightly
+// more forgiving than the visible band so the control remains easy to drag.
 // yields a circle of radius S*(0.5 - X/100), i.e. (1 - 2X/100) as a fraction of the
 // half-width (S/2), which is what radiusFraction below is measured in. A little slack on
 // each side makes the hit target more forgiving without reaching into the card in the middle.
-const RING_INNER_FRACTION = 0.7
-const RING_OUTER_FRACTION = 0.98
+const RING_INNER_FRACTION = 0.73
+const RING_OUTER_FRACTION = 0.97
 
 function normalizeDeg(deg: number): number {
   return ((deg % 360) + 360) % 360
@@ -127,13 +127,16 @@ const LivePreview = forwardRef<TLivePreviewHandle, { initial: TColors }>(functio
     <div className={'relative flex justify-center'}>
       <div
         ref={glowRef}
-        className={'pointer-events-none absolute inset-0 -z-10 rounded-full opacity-30 blur-[90px]'}
+        className={'pointer-events-none absolute inset-[4%] -z-10 rounded-full opacity-[0.18] blur-[72px]'}
         style={{ backgroundColor: initial.accent }}
       />
       <div
         ref={cardRef}
         className={'w-full max-w-[380px] rounded-2xl border p-5 shadow-2xl'}
-        style={{ backgroundColor: initial.background, borderColor: `${initial.accent}40` }}
+        style={{
+          backgroundColor: initial.background,
+          borderColor: `${initial.accent}40`,
+        }}
       >
         <div className={'mb-4 flex items-center justify-between'}>
           <span className={'text-base font-semibold text-white'}>{'Swap'}</span>
@@ -237,7 +240,7 @@ function LiveThemeSwitcher(): ReactNode {
   // backwards — see colorsAtGradientAngle: gradientAngle = bearing - rotation.
   useAnimationFrame((_time, delta) => {
     if (isHoveringRef.current || shouldReduceMotion || !isVisibleRef.current) return
-    rotation.set(rotation.get() - delta * 0.02) // 360deg every 18s
+    rotation.set(rotation.get() - delta * 0.012) // 360deg every 30s
 
     const gradientAngle = normalizeDeg(0 - rotation.get())
     applyColors(colorsAtGradientAngle(gradientAngle))
@@ -315,27 +318,24 @@ function LiveThemeSwitcher(): ReactNode {
         aria-valuenow={discreteIndex}
         aria-valuetext={presets[discreteIndex].name}
         className={
-          'relative flex aspect-square w-full max-w-[560px] touch-none items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-4 focus-visible:ring-offset-[#0a0b11]'
+          'relative flex aspect-square w-full max-w-[570px] touch-none items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-4 focus-visible:ring-offset-[#0a0b11]'
         }
       >
         <motion.div
           aria-hidden={'true'}
-          className={'pointer-events-none absolute inset-[3%] rounded-full blur-[1px]'}
-          style={{ background: RING_GRADIENT, rotate: rotation }}
-        />
-        <div
-          aria-hidden={'true'}
-          className={
-            'pointer-events-none absolute inset-[12%] rounded-full bg-[#0a0b11] shadow-[inset_0_0_70px_rgba(255,255,255,.04)]'
-          }
+          className={'pointer-events-none absolute inset-[7%] rounded-full opacity-[0.66] blur-[9px] saturate-[0.88]'}
+          style={{
+            background: RING_GRADIENT,
+            rotate: rotation,
+          }}
         />
         <div
           ref={ringGlowRef}
           aria-hidden={'true'}
-          className={'pointer-events-none absolute inset-[5%] rounded-full opacity-25 blur-[42px]'}
+          className={'pointer-events-none absolute inset-[7%] rounded-full opacity-[0.14] blur-[34px]'}
           style={{ backgroundColor: presets[0].accent }}
         />
-        <div className={'relative z-10 w-[72%] max-w-[380px]'}>
+        <div className={'relative z-10 w-[74%] max-w-[390px] sm:w-[68%]'}>
           <LivePreview ref={livePreviewRef} initial={presets[0]} />
         </div>
       </div>
@@ -346,20 +346,30 @@ function LiveThemeSwitcher(): ReactNode {
 export function DevelopersWidgetSection(): ReactNode {
   const { widget } = DEVELOPERS_DICT.page
   return (
-    <section id={'widget'} className={'container scroll-mt-28 pt-16 lg:scroll-mt-32 lg:pt-20'}>
-      <div className={'mb-10 grid gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-end'}>
-        <div>
-          <h2 className={'text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>{widget.title}</h2>
+    <section id={'widget'} className={'container scroll-mt-28 pt-14 lg:scroll-mt-32 lg:pt-16'}>
+      <div
+        className={
+          'grid items-center gap-8 border-y border-white/[0.08] py-8 sm:py-10 lg:grid-cols-[.78fr_1.22fr] lg:gap-12 lg:py-12'
+        }
+      >
+        <div className={'lg:pl-4'}>
+          <h2 className={'max-w-[600px] text-[38px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[50px]'}>
+            {widget.title}
+          </h2>
+          <p className={'mt-5 max-w-[680px] text-base leading-relaxed text-secondary sm:text-lg'}>
+            {widget.description}
+          </p>
+          <div className={'mt-5'}>
+            <Button
+              href={'https://widget.shapeshift.com/'}
+              variant={'blue'}
+              title={widget.ctaButton}
+              hasArrow
+              className={'w-fit'}
+            />
+          </div>
         </div>
-        <p className={'max-w-[680px] text-lg leading-relaxed text-secondary'}>{widget.description}</p>
-      </div>
-
-      <div className={'border-y border-white/[0.08] py-10 sm:py-12 lg:py-14'}>
         <LiveThemeSwitcher />
-
-        <div className={'mt-10 flex justify-center'}>
-          <Button href={'https://widget.shapeshift.com/'} variant={'blue'} title={widget.ctaButton} hasArrow />
-        </div>
       </div>
     </section>
   )

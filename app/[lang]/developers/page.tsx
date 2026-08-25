@@ -22,7 +22,7 @@ export default function DevelopersPage(): ReactNode {
       <DevelopersApiSection />
       <DevelopersEconomicsSection />
       <DevelopersLaunchPath />
-      <div className={'pt-16 lg:pt-20'}>
+      <div className={'pt-12 lg:pt-14'}>
         <DevelopersFaq />
       </div>
       <DevelopersCta />
