@@ -170,17 +170,10 @@ export function DevelopersApiSection(): ReactNode {
               aria-pressed={activeTab === index}
               className={
                 activeTab === index
-                  ? 'group relative block w-full border-t border-blue/40 py-6 text-left transition-colors'
-                  : 'group relative block w-full border-t border-stroke py-6 text-left transition-colors hover:border-blue/40 focus-visible:border-blue/40 focus-visible:outline-none'
+                  ? 'group block w-full border-t border-stroke bg-white/[0.02] py-6 text-left transition-colors'
+                  : 'group block w-full border-t border-stroke py-6 text-left transition-colors hover:bg-white/[0.02] focus-visible:bg-white/[0.02] focus-visible:outline-none'
               }
             >
-              <span
-                className={
-                  activeTab === index
-                    ? 'absolute inset-y-0 left-0 w-px bg-blue shadow-[0_0_18px_#386FF9]'
-                    : 'absolute inset-y-0 left-0 w-px bg-transparent transition-colors group-hover:bg-blue group-focus-visible:bg-blue'
-                }
-              />
               <div className={'flex flex-col gap-2 pl-5'}>
                 <div className={'flex flex-wrap items-center gap-3'}>
                   <span
