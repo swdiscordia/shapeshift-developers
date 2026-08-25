@@ -157,7 +157,7 @@ export function DevelopersWidgetSection(): ReactNode {
         <div className={'mx-auto mb-9 max-w-[440px] text-center'}>
           <h3 className={'mb-2 text-2xl font-semibold tracking-[-0.02em]'}>{'Make it feel native to your product.'}</h3>
           <p className={'text-sm leading-relaxed text-gray-400 sm:text-base'}>
-            {'Pick a preset — the widget updates live, right here.'}
+            {'Pick a preset. The widget updates live, right here.'}
           </p>
         </div>
 

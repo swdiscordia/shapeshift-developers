@@ -5,7 +5,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'ShapeShift for Developers',
     description:
-      'Add multichain swaps to your product. Embed the ShapeShift widget or build directly on the swap API — 48+ chains, 30,000+ assets, non-custodial.',
+      'Add multichain swaps to your product. Embed the ShapeShift widget or build directly on the swap API. 48+ chains, 30,000+ assets, non-custodial.',
     keywords: 'ShapeShift, Developers, Swap API, Swap Widget, SDK',
     openGraph: {
       title: 'ShapeShift for Developers',

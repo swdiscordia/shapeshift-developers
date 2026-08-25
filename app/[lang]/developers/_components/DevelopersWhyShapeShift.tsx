@@ -78,16 +78,10 @@ export function DevelopersWhyShapeShift(): ReactNode {
         </div>
 
         <div className={'border-y border-white/[0.08]'}>
-          {principles.map(([title, description], index) => (
-            <div
-              key={title}
-              className={'grid grid-cols-[46px_1fr] gap-5 border-b border-white/[0.08] py-7 last:border-b-0'}
-            >
-              <span className={'font-mono text-xs text-blueLight'}>{`0${index + 1}`}</span>
-              <div>
-                <h3 className={'mb-2 text-xl font-semibold tracking-[-0.02em]'}>{title}</h3>
-                <p className={'text-[15px] leading-relaxed text-gray-400'}>{description}</p>
-              </div>
+          {principles.map(([title, description]) => (
+            <div key={title} className={'border-b border-white/[0.08] py-7 last:border-b-0'}>
+              <h3 className={'mb-2 text-xl font-semibold tracking-[-0.02em]'}>{title}</h3>
+              <p className={'text-[15px] leading-relaxed text-gray-400'}>{description}</p>
             </div>
           ))}
         </div>

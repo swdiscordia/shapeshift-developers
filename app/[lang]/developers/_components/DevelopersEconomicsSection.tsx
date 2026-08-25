@@ -5,21 +5,18 @@ import type { ReactNode } from 'react'
 
 const milestones = [
   {
-    number: '01',
     icon: '</>',
     label: 'Your product',
     title: 'Add your partner code',
     description: 'One parameter in the Widget or API.',
   },
   {
-    number: '02',
     icon: '⇄',
     label: 'ShapeShift',
     title: 'We route every swap',
     description: 'The trade stays attributed to your product.',
   },
   {
-    number: '03',
     icon: '$',
     label: 'Your wallet',
     title: 'Your fee settles on-chain',
@@ -37,13 +34,6 @@ function MilestoneMarker({ index }: { index: number }): ReactNode {
       <div className={'flex size-10 items-center justify-center rounded-full bg-blue text-sm font-bold text-white'}>
         {milestones[index].icon}
       </div>
-      <span
-        className={
-          'absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-mint font-mono text-[9px] font-bold text-[#07110C]'
-        }
-      >
-        {milestones[index].number}
-      </span>
     </div>
   )
 }
@@ -86,7 +76,7 @@ export function DevelopersEconomicsSection(): ReactNode {
             }
           />
           {milestones.map((milestone, index) => (
-            <div key={milestone.number} className={'relative z-10 flex flex-1 flex-col items-center gap-5'}>
+            <div key={milestone.title} className={'relative z-10 flex flex-1 flex-col items-center gap-5'}>
               <MilestoneMarker index={index} />
               <MilestoneCopy index={index} />
             </div>
@@ -95,7 +85,7 @@ export function DevelopersEconomicsSection(): ReactNode {
 
         <div className={'relative flex flex-col gap-6 lg:hidden'}>
           {milestones.map((milestone, index) => (
-            <div key={milestone.number} className={'relative flex items-start gap-4'}>
+            <div key={milestone.title} className={'relative flex items-start gap-4'}>
               {index < milestones.length - 1 ? (
                 <div className={'absolute left-7 top-14 h-6 w-px bg-gradient-to-b from-blue/40 to-mint/40'} />
               ) : null}
@@ -117,7 +107,7 @@ export function DevelopersEconomicsSection(): ReactNode {
           <div className={'font-semibold'}>{'One integration. Revenue from every attributed swap.'}</div>
           <div className={'shrink-0 text-left sm:text-right'}>
             <div className={'text-[10px] uppercase tracking-[0.12em] text-gray-500'}>{'Partner fee'}</div>
-            <div className={'mt-1 text-2xl font-semibold text-mint'}>{'0–100 bps'}</div>
+            <div className={'mt-1 text-2xl font-semibold text-mint'}>{'0 to 100 bps'}</div>
           </div>
         </div>
       </div>

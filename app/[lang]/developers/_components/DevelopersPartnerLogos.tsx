@@ -2,9 +2,6 @@
 
 import { Carousel } from '@/app/[lang]/_components/Carousel'
 import { carouselLogos } from '@/app/[lang]/_utils/constants'
-import { DEVELOPERS_DICT } from '@/app/[lang]/_utils/dictionary/developers'
-
-import { SectionEyebrow } from './SectionEyebrow'
 
 import type { ReactNode } from 'react'
 
@@ -41,9 +38,6 @@ function ProtocolRow(): ReactNode {
 export function DevelopersPartnerLogos(): ReactNode {
   return (
     <section className={'mt-20 overflow-hidden border-y border-white/[0.07] py-8 lg:mt-24'}>
-      <div className={'container mb-6'}>
-        <SectionEyebrow dot={'blue'}>{DEVELOPERS_DICT.page.partnerLogos.label}</SectionEyebrow>
-      </div>
       <div
         className={
           'relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]'

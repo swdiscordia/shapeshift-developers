@@ -154,32 +154,40 @@ export function DevelopersApiSection(): ReactNode {
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <section id={'api'} className={'container pt-20 lg:pt-24'}>
+    <section id={'api'} className={'container scroll-mt-28 pt-20 lg:scroll-mt-32 lg:pt-24'}>
       <h2 className={'mb-4 text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>{api.title}</h2>
       <p className={'mb-14 max-w-[640px] text-lg leading-relaxed text-secondary'}>{api.description}</p>
 
       <div className={'grid grid-cols-1 items-start gap-16 lg:grid-cols-[1fr_1.1fr]'}>
         <div>
           {api.endpoints.map((endpoint, index) => (
-            <div
+            <button
+              type={'button'}
               key={endpoint.method}
               onClick={() => setActiveTab(index)}
-              className={'grid cursor-pointer grid-cols-[44px_1fr] gap-0 border-t border-stroke py-6'}
+              onMouseEnter={() => setActiveTab(index)}
+              onFocus={() => setActiveTab(index)}
+              aria-pressed={activeTab === index}
+              className={
+                activeTab === index
+                  ? 'group relative block w-full border-t border-blue/40 py-6 text-left transition-colors'
+                  : 'group relative block w-full border-t border-stroke py-6 text-left transition-colors hover:border-blue/40 focus-visible:border-blue/40 focus-visible:outline-none'
+              }
             >
               <span
                 className={
-                  activeTab === index ? 'font-mono text-[13px] text-blueLight' : 'font-mono text-[13px] text-gray-600'
+                  activeTab === index
+                    ? 'absolute inset-y-0 left-0 w-px bg-blue shadow-[0_0_18px_#386FF9]'
+                    : 'absolute inset-y-0 left-0 w-px bg-transparent transition-colors group-hover:bg-blue group-focus-visible:bg-blue'
                 }
-              >
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <div className={'flex flex-col gap-2'}>
+              />
+              <div className={'flex flex-col gap-2 pl-5'}>
                 <div className={'flex flex-wrap items-center gap-3'}>
                   <span
                     className={
                       activeTab === index
                         ? 'text-lg font-semibold tracking-[-0.01em] text-white transition-colors'
-                        : 'text-lg font-semibold tracking-[-0.01em] text-gray-500 transition-colors'
+                        : 'text-lg font-semibold tracking-[-0.01em] text-gray-500 transition-colors group-hover:text-white group-focus-visible:text-white'
                     }
                   >
                     {endpoint.title}
@@ -194,7 +202,7 @@ export function DevelopersApiSection(): ReactNode {
                 </div>
                 <p className={'text-[14.5px] leading-relaxed text-gray-500'}>{endpoint.description}</p>
               </div>
-            </div>
+            </button>
           ))}
           <div className={'border-t border-stroke pt-7'}>
             <Button

@@ -122,21 +122,18 @@ function RevenueVisual(): ReactNode {
 
 const useCases = [
   {
-    number: '01',
     eyebrow: 'Wallets & apps',
     title: 'Keep users in your product',
     description: 'Offer native swaps without redirecting users or giving up your brand experience.',
     visual: <WalletVisual />,
   },
   {
-    number: '02',
     eyebrow: 'Chains & protocols',
     title: 'Bring liquidity to your ecosystem',
     description: 'Give users a direct multichain route into your chain, token, or protocol.',
     visual: <ChainVisual />,
   },
   {
-    number: '03',
     eyebrow: 'Partners',
     title: 'Turn usage into revenue',
     description: 'Set your fee, attribute every trade, and grow with transparent on-chain economics.',
@@ -163,14 +160,13 @@ export function DevelopersUseCases(): ReactNode {
       <div className={'grid gap-4 lg:grid-cols-3'}>
         {useCases.map((useCase) => (
           <article
-            key={useCase.number}
+            key={useCase.title}
             className={
               'group overflow-hidden rounded-[32px] border border-white/[0.08] bg-[#111522] p-3 transition-transform duration-300 hover:-translate-y-1'
             }
           >
             <div className={'rounded-[24px] bg-gradient-to-b from-blue/[0.16] to-blue/[0.03]'}>{useCase.visual}</div>
             <div className={'p-5 pb-6 sm:p-6'}>
-              <span className={'mb-5 block font-mono text-xs text-blueLight'}>{useCase.number}</span>
               <h3 className={'mb-3 text-2xl font-semibold leading-tight tracking-[-0.025em]'}>{useCase.title}</h3>
               <p className={'text-[15px] leading-relaxed text-gray-400'}>{useCase.description}</p>
             </div>

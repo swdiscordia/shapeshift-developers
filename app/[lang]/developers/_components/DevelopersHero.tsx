@@ -5,8 +5,6 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/app/[lang]/_components/Button'
 
-import { SectionEyebrow } from './SectionEyebrow'
-
 import type { ReactNode } from 'react'
 
 // The real widget.shapeshift.com card, measured directly against the live page: its own
@@ -67,6 +65,14 @@ function RealWidgetEmbed(): ReactNode {
 
 export function DevelopersHero(): ReactNode {
   const shouldReduceMotion = useReducedMotion()
+  const palette = ['#386FF9', '#9D63EC', '#70E1B1', '#06B6D4']
+  const [paletteIndex, setPaletteIndex] = useState(0)
+
+  useEffect(() => {
+    if (shouldReduceMotion) return undefined
+    const interval = window.setInterval(() => setPaletteIndex((index) => (index + 1) % palette.length), 3200)
+    return () => window.clearInterval(interval)
+  }, [shouldReduceMotion, palette.length])
 
   return (
     <section className={'relative overflow-hidden pb-16 pt-5 lg:pb-20 lg:pt-4'}>
@@ -81,7 +87,6 @@ export function DevelopersHero(): ReactNode {
           transition={{ duration: 0.6 }}
           className={'min-w-0 lg:pt-4'}
         >
-          <SectionEyebrow variant={'pill'}>{'The ShapeShift Widget'}</SectionEyebrow>
           <h1
             className={
               'mb-6 max-w-full text-[46px] font-bold leading-[.98] tracking-[-0.05em] sm:text-[60px] lg:text-[68px]'
@@ -94,7 +99,7 @@ export function DevelopersHero(): ReactNode {
           </h1>
           <p className={'mb-7 max-w-[600px] text-lg leading-relaxed text-secondary sm:text-xl'}>
             {
-              'Give your users a complete, customizable swap experience across 48+ chains—without building or maintaining the routing infrastructure.'
+              'Give your users a complete, customizable swap experience across 48+ chains. ShapeShift handles the routing infrastructure.'
             }
           </p>
           <div className={'mb-8 flex flex-col gap-3 sm:flex-row'}>
@@ -102,12 +107,19 @@ export function DevelopersHero(): ReactNode {
             <Button href={'https://discord.gg/shapeshift'} variant={'white'} title={'Talk with us'} />
           </div>
           <div className={'flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-400'}>
-            {['48+ chains', '18 routing protocols', 'Partner revenue'].map((benefit, index) => (
+            {['48+ chains', '18 routing protocols'].map((benefit, index) => (
               <span key={benefit} className={'flex items-center'}>
                 {index > 0 ? <span className={'mr-5 text-gray-700'}>{'/'}</span> : null}
                 {benefit}
               </span>
             ))}
+          </div>
+          <div className={'mt-7 border-y border-white/10 py-4'}>
+            <div className={'flex flex-wrap items-baseline gap-x-3 gap-y-1'}>
+              <strong className={'text-lg font-semibold text-white'}>{'Earn on every attributed swap'}</strong>
+              <span className={'text-base font-semibold text-mint'}>{'Set 0 to 100 bps'}</span>
+            </div>
+            <p className={'mt-1 text-sm text-gray-400'}>{'Your partner fee settles directly on-chain.'}</p>
           </div>
           <a
             href={'#api'}
@@ -123,13 +135,16 @@ export function DevelopersHero(): ReactNode {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, duration: 0.6 }}
           className={
-            'relative mx-auto flex min-h-[560px] min-w-0 w-full max-w-[600px] items-center justify-center px-2 py-10 lg:min-h-[540px] lg:px-10 lg:py-0'
+            'relative mx-auto flex min-h-[560px] min-w-0 w-full max-w-[660px] items-center justify-center px-2 py-10 lg:min-h-[600px] lg:px-10 lg:py-0'
           }
         >
           <div
             className={
-              'pointer-events-none absolute -inset-x-[36%] inset-y-1 bg-[radial-gradient(ellipse_at_50%_40%,rgba(56,97,251,.38),rgba(13,17,29,.7)_52%,transparent_84%)]'
+              'pointer-events-none absolute -inset-x-[42%] inset-y-[-8%] rounded-full opacity-70 blur-[70px] transition-colors duration-1000'
             }
+            style={{
+              background: `radial-gradient(circle, ${palette[paletteIndex]}55 0%, transparent 68%)`,
+            }}
           />
           <div
             className={'pointer-events-none absolute -inset-x-[36%] inset-y-1 opacity-30'}
@@ -141,14 +156,47 @@ export function DevelopersHero(): ReactNode {
               WebkitMaskImage: 'linear-gradient(to bottom, black, transparent 86%)',
             }}
           />
-          <div className={'pointer-events-none absolute inset-[10%] rounded-full bg-blue/25 blur-[90px]'} />
+          <motion.div
+            aria-hidden={'true'}
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    borderRadius: [
+                      '42% 58% 61% 39% / 46% 38% 62% 54%',
+                      '58% 42% 38% 62% / 39% 61% 42% 58%',
+                      '42% 58% 61% 39% / 46% 38% 62% 54%',
+                    ],
+                    rotate: [0, 8, 0],
+                    scale: [1, 1.04, 1],
+                  }
+            }
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            className={'pointer-events-none absolute inset-[3%] opacity-45 blur-[34px] transition-colors duration-1000'}
+            style={{
+              background: `conic-gradient(from 130deg, ${palette[paletteIndex]}cc, #9D63EC88, #70E1B188, ${palette[paletteIndex]}cc)`,
+            }}
+          />
+
+          <div className={'pointer-events-none absolute inset-[7%] rounded-full border border-white/[0.06]'} />
 
           <motion.div
             animate={shouldReduceMotion ? undefined : { rotate: 360 }}
-            transition={shouldReduceMotion ? undefined : { duration: 22, repeat: Infinity, ease: 'linear' }}
-            className={'pointer-events-none absolute inset-[7%] rounded-full border border-dashed border-blue/20'}
+            transition={shouldReduceMotion ? undefined : { duration: 28, repeat: Infinity, ease: 'linear' }}
+            className={'pointer-events-none absolute inset-[2%] rounded-full'}
           >
-            <span className={'absolute -right-1 top-1/2 size-2.5 rounded-full bg-mint shadow-[0_0_14px_#70E1B1]'} />
+            {palette.map((color, index) => (
+              <span
+                key={color}
+                className={'absolute size-3 rounded-full blur-[1px]'}
+                style={{
+                  backgroundColor: color,
+                  boxShadow: `0 0 24px ${color}`,
+                  left: `${50 + Math.cos((index / palette.length) * Math.PI * 2) * 49}%`,
+                  top: `${50 + Math.sin((index / palette.length) * Math.PI * 2) * 49}%`,
+                }}
+              />
+            ))}
           </motion.div>
           <RealWidgetEmbed />
         </motion.div>
