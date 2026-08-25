@@ -120,7 +120,7 @@ function LiveThemeSwitcher(): ReactNode {
 
   return (
     <div className={'flex flex-col items-center gap-7'}>
-      <div className={'relative flex aspect-square w-full max-w-[460px] items-center justify-center'}>
+      <div className={'relative flex aspect-square w-full max-w-[560px] items-center justify-center'}>
         <motion.div
           aria-hidden={'true'}
           animate={shouldReduceMotion ? undefined : { rotate: 360 }}
@@ -144,7 +144,7 @@ function LiveThemeSwitcher(): ReactNode {
           }
           style={{ backgroundColor: preset.accent }}
         />
-        <div className={'relative z-10 w-[86%] max-w-[380px]'}>
+        <div className={'relative z-10 w-[72%] max-w-[380px]'}>
           <LivePreview preset={preset} />
         </div>
       </div>
