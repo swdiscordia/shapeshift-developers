@@ -8,7 +8,7 @@ export function DevelopersCta(): ReactNode {
   const { cta } = DEVELOPERS_DICT.page
 
   return (
-    <section className={'container pb-20 pt-24 lg:pt-32'}>
+    <section className={'container pb-20 pt-20 lg:pt-24'}>
       <div
         className={
           'relative overflow-hidden rounded-[20px] border border-stroke bg-secondBg p-8 text-center sm:p-12 lg:p-16'

@@ -54,7 +54,7 @@ export function DevelopersEconomicsSection(): ReactNode {
   const { economics } = DEVELOPERS_DICT.page
 
   return (
-    <section id={'economics'} className={'container pt-20 lg:pt-24'}>
+    <section id={'economics'} className={'container pt-16 lg:pt-20'}>
       <div className={'mx-auto mb-10 max-w-[780px] text-center lg:mb-12'}>
         <h2 className={'mb-5 text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>
           {economics.title}

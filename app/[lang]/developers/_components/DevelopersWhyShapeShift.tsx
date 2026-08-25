@@ -63,7 +63,7 @@ function RouterIllustration(): ReactNode {
 
 export function DevelopersWhyShapeShift(): ReactNode {
   return (
-    <section className={'container pt-20 lg:pt-24'}>
+    <section className={'container pt-16 lg:pt-20'}>
       <div className={'grid gap-12 lg:grid-cols-[1.05fr_.95fr] lg:items-center'}>
         <div>
           <h2 className={'mb-6 text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>

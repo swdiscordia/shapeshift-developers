@@ -37,7 +37,7 @@ function ProtocolRow(): ReactNode {
 
 export function DevelopersPartnerLogos(): ReactNode {
   return (
-    <section className={'mt-20 overflow-hidden border-y border-white/[0.07] py-8 lg:mt-24'}>
+    <section className={'mt-14 overflow-hidden border-y border-white/[0.07] py-7 lg:mt-16'}>
       <div
         className={
           'relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]'

@@ -154,7 +154,7 @@ export function DevelopersApiSection(): ReactNode {
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <section id={'api'} className={'container scroll-mt-28 pt-20 lg:scroll-mt-32 lg:pt-24'}>
+    <section id={'api'} className={'container scroll-mt-28 pt-16 lg:scroll-mt-32 lg:pt-20'}>
       <h2 className={'mb-4 text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>{api.title}</h2>
       <p className={'mb-14 max-w-[640px] text-lg leading-relaxed text-secondary'}>{api.description}</p>
 

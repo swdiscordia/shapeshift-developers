@@ -141,7 +141,7 @@ function LiveThemeSwitcher(): ReactNode {
 export function DevelopersWidgetSection(): ReactNode {
   const { widget } = DEVELOPERS_DICT.page
   return (
-    <section id={'widget'} className={'container scroll-mt-28 pt-20 lg:scroll-mt-32 lg:pt-24'}>
+    <section id={'widget'} className={'container scroll-mt-28 pt-16 lg:scroll-mt-32 lg:pt-20'}>
       <div className={'mb-10 grid gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-end'}>
         <div>
           <h2 className={'text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>{widget.title}</h2>

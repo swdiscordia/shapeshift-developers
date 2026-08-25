@@ -9,7 +9,7 @@ export const DEVELOPERS_DICT = {
     widget: {
       title: 'A complete swap experience, ready to embed',
       description:
-        'Configure the ShapeShift Widget to match your product, choose the default assets, and ship multichain swaps without building the interface or routing logic.',
+        'Match your product, choose the default assets, and ship multichain swaps without building the interface or routing logic.',
       features: [
         {
           tag: '48+ chains',
@@ -47,7 +47,7 @@ export const DEVELOPERS_DICT = {
     api: {
       title: 'Skip the UI and build your own',
       description:
-        'The same routing engine behind the widget, exposed as a REST API. We return unsigned transactions. Your users sign and broadcast them, and funds never touch ShapeShift.',
+        'Use the same routing engine through a REST API. We return unsigned transactions for your users to sign and broadcast.',
       endpoints: [
         {
           method: 'GET /v1/assets',
@@ -69,8 +69,7 @@ export const DEVELOPERS_DICT = {
     },
     economics: {
       title: 'How the revenue share works',
-      description:
-        'One partner code follows every swap from your product to on-chain settlement. No invoice, no payout schedule.',
+      description: 'One partner code follows every swap to on-chain settlement. No invoices or payout schedules.',
       steps: [
         {
           title: 'Add your partner code',
