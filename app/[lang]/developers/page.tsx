@@ -3,6 +3,7 @@ import { DevelopersCta } from './_components/DevelopersCta'
 import { DevelopersEconomicsSection } from './_components/DevelopersEconomicsSection'
 import { DevelopersFaq } from './_components/DevelopersFaq'
 import { DevelopersHero } from './_components/DevelopersHero'
+import { DevelopersLaunchPath } from './_components/DevelopersLaunchPath'
 import { DevelopersPartnerLogos } from './_components/DevelopersPartnerLogos'
 import { DevelopersStats } from './_components/DevelopersStats'
 import { DevelopersWhyShapeShift } from './_components/DevelopersWhyShapeShift'
@@ -20,6 +21,7 @@ export default function DevelopersPage(): ReactNode {
       <DevelopersWhyShapeShift />
       <DevelopersApiSection />
       <DevelopersEconomicsSection />
+      <DevelopersLaunchPath />
       <div className={'pt-16 lg:pt-20'}>
         <DevelopersFaq />
       </div>

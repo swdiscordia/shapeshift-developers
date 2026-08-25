@@ -97,8 +97,6 @@ export function DevelopersHero(): ReactNode {
   const shouldReduceMotion = useReducedMotion()
   const palette = ['#386FF9', '#9D63EC', '#70E1B1', '#06B6D4']
   const [paletteIndex, setPaletteIndex] = useState(0)
-  const [hasCopied, setHasCopied] = useState(false)
-  const embedSnippet = '<iframe src="https://widget.shapeshift.com/" title="ShapeShift Widget"></iframe>'
 
   useEffect(() => {
     if (shouldReduceMotion) return undefined
@@ -149,25 +147,11 @@ export function DevelopersHero(): ReactNode {
             </div>
             <p className={'mt-1 text-sm text-gray-400'}>{'Your partner fee settles directly on-chain.'}</p>
           </div>
-          <div className={'mt-5 flex max-w-[600px] items-center gap-3 border-b border-white/10 pb-5'}>
-            <code className={'min-w-0 flex-1 truncate font-mono text-[12px] text-gray-400'}>{embedSnippet}</code>
-            <button
-              type={'button'}
-              onClick={() => {
-                void navigator.clipboard.writeText(embedSnippet)
-                setHasCopied(true)
-                window.setTimeout(() => setHasCopied(false), 1800)
-              }}
-              className={'shrink-0 text-xs font-semibold text-white transition-colors hover:text-mint'}
-            >
-              {hasCopied ? 'Copied' : 'Copy embed'}
-            </button>
-          </div>
           <a
             href={'#api'}
-            className={'mt-6 inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-white'}
+            className={'mt-5 inline-flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-white'}
           >
-            {'Need a custom integration? Explore the API'}
+            {'Need more control? Build with the API'}
             <span aria-hidden={'true'}>{'→'}</span>
           </a>
         </motion.div>
