@@ -1,3 +1,5 @@
+import { DevelopersResourceHints } from './_components/DevelopersResourceHints'
+
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
@@ -33,5 +35,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function Layout({ children }: { children: ReactNode }): ReactNode {
-  return children
+  return (
+    <>
+      <DevelopersResourceHints />
+      {children}
+    </>
+  )
 }

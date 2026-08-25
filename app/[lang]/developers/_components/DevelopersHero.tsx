@@ -33,8 +33,8 @@ function RealWidgetEmbed(): ReactNode {
   useEffect(() => {
     const el = wrapperRef.current
     if (!el) return undefined
-    const observer = new ResizeObserver((entries) => {
-      const width = entries[0]?.contentRect.width ?? WIDGET_CARD_WIDTH
+    const observer = new ResizeObserver(() => {
+      const width = el.getBoundingClientRect().width
       setScale(Math.min(1, width / WIDGET_CARD_WIDTH))
     })
     observer.observe(el)
@@ -52,7 +52,7 @@ function RealWidgetEmbed(): ReactNode {
       className={
         'relative z-20 w-full max-w-[420px] overflow-hidden rounded-[28px] border border-white/10 bg-[#0A0A14] shadow-[0_35px_100px_rgba(0,0,0,.62)]'
       }
-      style={{ height: WIDGET_CARD_HEIGHT * scale }}
+      style={{ aspectRatio: `${WIDGET_CARD_WIDTH} / ${WIDGET_CARD_HEIGHT}` }}
     >
       <iframe
         src={'https://widget.shapeshift.com/'}
@@ -60,6 +60,7 @@ function RealWidgetEmbed(): ReactNode {
         width={WIDGET_CARD_WIDTH}
         height={WIDGET_IFRAME_HEIGHT}
         allow={'clipboard-write'}
+        loading={'eager'}
         onLoad={() => setIsLoaded(true)}
         style={{
           border: 0,
@@ -107,12 +108,7 @@ export function DevelopersHero(): ReactNode {
   return (
     <section className={'relative overflow-hidden pb-16 pt-5 lg:pb-20 lg:pt-4'}>
       <div className={'container relative grid min-w-0 items-center gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12'}>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className={'min-w-0 lg:pt-4'}
-        >
+        <motion.div initial={false} className={'min-w-0 lg:pt-4'}>
           <h1
             className={
               'mb-6 max-w-full text-[46px] font-bold leading-[.98] tracking-[-0.05em] sm:text-[60px] lg:text-[68px]'
@@ -157,15 +153,14 @@ export function DevelopersHero(): ReactNode {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1, duration: 0.6 }}
+          initial={false}
           className={
             'relative mx-auto flex min-h-[560px] min-w-0 w-full max-w-[660px] items-center justify-center px-2 py-10 lg:min-h-[600px] lg:px-10 lg:py-0'
           }
         >
           <motion.div
             aria-hidden={'true'}
+            initial={false}
             animate={
               shouldReduceMotion
                 ? undefined
