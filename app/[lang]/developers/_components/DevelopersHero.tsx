@@ -27,6 +27,8 @@ const WIDGET_IFRAME_HEIGHT = WIDGET_CROP_TOP + WIDGET_CARD_HEIGHT
 function RealWidgetEmbed(): ReactNode {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [hasTimedOut, setHasTimedOut] = useState(false)
 
   useEffect(() => {
     const el = wrapperRef.current
@@ -39,11 +41,16 @@ function RealWidgetEmbed(): ReactNode {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setHasTimedOut(true), 8000)
+    return () => window.clearTimeout(timeout)
+  }, [])
+
   return (
     <div
       ref={wrapperRef}
       className={
-        'relative z-20 w-full max-w-[420px] overflow-hidden rounded-[28px] border border-blue/30 bg-[#0A0A14] shadow-[0_35px_100px_rgba(0,0,0,.62),0_0_90px_rgba(56,111,249,.3)]'
+        'relative z-20 w-full max-w-[420px] overflow-hidden rounded-[28px] border border-white/10 bg-[#0A0A14] shadow-[0_35px_100px_rgba(0,0,0,.62)]'
       }
       style={{ height: WIDGET_CARD_HEIGHT * scale }}
     >
@@ -53,12 +60,35 @@ function RealWidgetEmbed(): ReactNode {
         width={WIDGET_CARD_WIDTH}
         height={WIDGET_IFRAME_HEIGHT}
         allow={'clipboard-write'}
+        onLoad={() => setIsLoaded(true)}
         style={{
           border: 0,
           transform: `scale(${scale}) translateY(${-WIDGET_CROP_TOP}px)`,
           transformOrigin: 'top left',
         }}
       />
+      {!isLoaded ? (
+        <div className={'absolute inset-0 z-10 flex items-center justify-center bg-[#0A0A14] px-8 text-center'}>
+          <div>
+            <span
+              className={'mx-auto mb-4 block size-2 animate-pulse rounded-full bg-mint shadow-[0_0_18px_#70E1B1]'}
+            />
+            <p className={'text-sm font-medium text-white'}>
+              {hasTimedOut ? 'The live Widget is taking longer than expected.' : 'Loading the live Widget'}
+            </p>
+            {hasTimedOut ? (
+              <a
+                href={'https://widget.shapeshift.com/'}
+                target={'_blank'}
+                rel={'noreferrer'}
+                className={'mt-3 inline-flex text-sm text-blueLight hover:text-white'}
+              >
+                {'Open the Widget directly →'}
+              </a>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -67,6 +97,8 @@ export function DevelopersHero(): ReactNode {
   const shouldReduceMotion = useReducedMotion()
   const palette = ['#386FF9', '#9D63EC', '#70E1B1', '#06B6D4']
   const [paletteIndex, setPaletteIndex] = useState(0)
+  const [hasCopied, setHasCopied] = useState(false)
+  const embedSnippet = '<iframe src="https://widget.shapeshift.com/" title="ShapeShift Widget"></iframe>'
 
   useEffect(() => {
     if (shouldReduceMotion) return undefined
@@ -76,10 +108,6 @@ export function DevelopersHero(): ReactNode {
 
   return (
     <section className={'relative overflow-hidden pb-16 pt-5 lg:pb-20 lg:pt-4'}>
-      <div
-        className={'pointer-events-none absolute right-[8%] top-24 size-[600px] rounded-full bg-blue/14 blur-[150px]'}
-      />
-
       <div className={'container relative grid min-w-0 items-center gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12'}>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -120,6 +148,20 @@ export function DevelopersHero(): ReactNode {
               <span className={'text-base font-semibold text-mint'}>{'Set 0 to 100 bps'}</span>
             </div>
             <p className={'mt-1 text-sm text-gray-400'}>{'Your partner fee settles directly on-chain.'}</p>
+          </div>
+          <div className={'mt-5 flex max-w-[600px] items-center gap-3 border-b border-white/10 pb-5'}>
+            <code className={'min-w-0 flex-1 truncate font-mono text-[12px] text-gray-400'}>{embedSnippet}</code>
+            <button
+              type={'button'}
+              onClick={() => {
+                void navigator.clipboard.writeText(embedSnippet)
+                setHasCopied(true)
+                window.setTimeout(() => setHasCopied(false), 1800)
+              }}
+              className={'shrink-0 text-xs font-semibold text-white transition-colors hover:text-mint'}
+            >
+              {hasCopied ? 'Copied' : 'Copy embed'}
+            </button>
           </div>
           <a
             href={'#api'}

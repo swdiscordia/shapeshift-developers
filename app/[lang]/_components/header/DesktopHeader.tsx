@@ -75,10 +75,17 @@ export function DesktopHeader({ className, switchLanguageAction, currentLanguage
   return (
     <div className={'sticky top-0 z-50 hidden rounded-2xl lg:block'}>
       <Notification />
-      <div onMouseLeave={() => setCurrentTab('')} className={'roudnded-2xl relative mt-3 w-full bg-transparent'}>
+      <div
+        onMouseLeave={() => setCurrentTab('')}
+        className={cl(
+          'roudnded-2xl relative w-full bg-transparent transition-all duration-300',
+          isScrolled ? 'mt-1' : 'mt-3'
+        )}
+      >
         <div
           className={cl(
-            'flex flex-col border border-transparent items-center transition-all backdrop-blur-2xl duration-300 justify-between px-6 py-3',
+            'flex flex-col border border-transparent items-center transition-all backdrop-blur-2xl duration-300 justify-between px-6',
+            isScrolled ? 'py-1.5' : 'py-3',
             currentTab ? 'rounded-t-lg' : 'rounded-lg',
             getVariant(),
             className
@@ -107,9 +114,10 @@ export function DesktopHeader({ className, switchLanguageAction, currentLanguage
             <div className={'flex gap-2'}>
               <button
                 onMouseEnter={() => setCurrentTab('language')}
-                className={
-                  'group flex aspect-square h-14 items-center justify-center rounded-[20px] border border-white/5'
-                }
+                className={cl(
+                  'group flex aspect-square items-center justify-center border border-white/5 transition-all duration-300',
+                  isScrolled ? 'h-11 rounded-2xl' : 'h-14 rounded-[20px]'
+                )}
               >
                 <IconPlanet className={'opacity-50 transition-opacity group-hover:opacity-100'} />
               </button>

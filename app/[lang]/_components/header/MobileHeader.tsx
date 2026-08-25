@@ -88,10 +88,10 @@ export function MobileHeader({
     <div className={'sticky top-0 z-50 lg:hidden'}>
       <div
         className={cl(
-          'z-50 flex w-full items-center justify-between border p-4 backdrop-blur-2xl transition-all duration-300',
+          'z-50 flex w-full items-center justify-between border backdrop-blur-2xl transition-all duration-300',
           isScrolled
-            ? 'mt-2 rounded-[22px] border-transparent bg-[#151B2A]/72 shadow-[0_14px_40px_rgba(0,0,0,.22)]'
-            : 'mt-6 rounded-2xl border-transparent bg-[#0B0F17]/72'
+            ? 'mt-1 rounded-[18px] border-transparent bg-[#151B2A]/72 p-2.5 shadow-[0_14px_40px_rgba(0,0,0,.22)]'
+            : 'mt-6 rounded-2xl border-transparent bg-[#0B0F17]/72 p-4'
         )}
       >
         <LocalizedLink href={'/'} aria-label={'ShapeShift'}>

@@ -106,7 +106,7 @@ export function DevelopersEconomicsSection(): ReactNode {
         >
           <div className={'font-semibold'}>{'One integration. Revenue from every attributed swap.'}</div>
           <div className={'shrink-0 text-left sm:text-right'}>
-            <div className={'text-[10px] uppercase tracking-[0.12em] text-gray-500'}>{'Partner fee'}</div>
+            <div className={'text-xs text-gray-500'}>{'Partner fee'}</div>
             <div className={'mt-1 text-2xl font-semibold text-mint'}>{'0 to 100 bps'}</div>
           </div>
         </div>

@@ -17,7 +17,7 @@ export function DevelopersStats(): ReactNode {
           <div className={'text-3xl font-semibold leading-tight text-white lg:text-[46px] lg:leading-[54px]'}>
             {stat.value}
           </div>
-          <div className={'mt-1 text-sm uppercase tracking-[0.08em] text-gray-500'}>{stat.title}</div>
+          <div className={'mt-1 text-sm text-gray-500'}>{stat.title}</div>
         </div>
       ))}
     </div>

@@ -94,6 +94,7 @@ function TypedCodePanel({ activeTab }: { activeTab: number }): ReactNode {
   const shouldReduceMotion = useReducedMotion()
   const source = codePanels[activeTab].lines.join('\n')
   const [visibleCharacters, setVisibleCharacters] = useState(0)
+  const [hasCopied, setHasCopied] = useState(false)
 
   useEffect(() => {
     if (!isInView) {
@@ -119,6 +120,8 @@ function TypedCodePanel({ activeTab }: { activeTab: number }): ReactNode {
     return () => window.clearInterval(interval)
   }, [activeTab, isInView, shouldReduceMotion, source.length])
 
+  useEffect(() => setHasCopied(false), [activeTab])
+
   return (
     <div ref={panelRef} className={'sticky top-[120px] overflow-hidden rounded-2xl border border-stroke bg-[#0d1117]'}>
       <div className={'flex items-center gap-3.5 border-b border-stroke px-5 py-3.5'}>
@@ -128,7 +131,17 @@ function TypedCodePanel({ activeTab }: { activeTab: number }): ReactNode {
           <span className={'size-2.5 rounded-full bg-stroke'} />
         </div>
         <span className={'font-mono text-xs text-gray-500'}>{codePanels[activeTab].label}</span>
-        <span className={'ml-auto font-mono text-[10px] text-gray-500'}>{'EXAMPLE'}</span>
+        <button
+          type={'button'}
+          onClick={() => {
+            void navigator.clipboard.writeText(source)
+            setHasCopied(true)
+            window.setTimeout(() => setHasCopied(false), 1800)
+          }}
+          className={'ml-auto font-mono text-[10px] text-gray-500 transition-colors hover:text-white'}
+        >
+          {hasCopied ? 'COPIED' : 'COPY'}
+        </button>
       </div>
       <pre
         className={
@@ -205,6 +218,24 @@ export function DevelopersApiSection(): ReactNode {
               hasArrow
               className={'w-full sm:w-fit'}
             />
+            <div className={'mt-6 flex flex-wrap gap-x-6 gap-y-3 text-sm'}>
+              <a
+                href={'https://github.com/shapeshift'}
+                target={'_blank'}
+                rel={'noreferrer'}
+                className={'text-gray-500 transition-colors hover:text-white'}
+              >
+                {'GitHub ↗'}
+              </a>
+              <a
+                href={'https://discord.gg/shapeshift'}
+                target={'_blank'}
+                rel={'noreferrer'}
+                className={'text-gray-500 transition-colors hover:text-white'}
+              >
+                {'Integration support ↗'}
+              </a>
+            </div>
           </div>
         </div>
 
