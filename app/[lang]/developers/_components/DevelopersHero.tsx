@@ -1,9 +1,12 @@
 'use client'
 
 import { motion, useReducedMotion } from 'framer-motion'
+import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/app/[lang]/_components/Button'
+import { IconFox } from '@/app/[lang]/_icons/IconFox'
+import { IconSettings } from '@/app/[lang]/_icons/IconSettings'
 
 import type { ReactNode } from 'react'
 
@@ -26,8 +29,9 @@ const WIDGET_IFRAME_HEIGHT = WIDGET_CROP_TOP + WIDGET_CARD_HEIGHT
 
 function RealWidgetEmbed(): ReactNode {
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const readyTimerRef = useRef<number | undefined>(undefined)
   const [scale, setScale] = useState(1)
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isReady, setIsReady] = useState(false)
   const [hasTimedOut, setHasTimedOut] = useState(false)
 
   useEffect(() => {
@@ -43,7 +47,10 @@ function RealWidgetEmbed(): ReactNode {
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setHasTimedOut(true), 8000)
-    return () => window.clearTimeout(timeout)
+    return () => {
+      window.clearTimeout(timeout)
+      if (readyTimerRef.current) window.clearTimeout(readyTimerRef.current)
+    }
   }, [])
 
   return (
@@ -61,35 +68,93 @@ function RealWidgetEmbed(): ReactNode {
         height={WIDGET_IFRAME_HEIGHT}
         allow={'clipboard-write'}
         loading={'eager'}
-        onLoad={() => setIsLoaded(true)}
+        onLoad={() => {
+          readyTimerRef.current = window.setTimeout(() => setIsReady(true), 1800)
+        }}
+        className={'transition-opacity duration-300'}
         style={{
           border: 0,
+          opacity: isReady ? 1 : 0,
           transform: `scale(${scale}) translateY(${-WIDGET_CROP_TOP}px)`,
           transformOrigin: 'top left',
         }}
       />
-      {!isLoaded ? (
-        <div className={'absolute inset-0 z-10 flex items-center justify-center bg-[#0A0A14] px-8 text-center'}>
-          <div>
-            <span
-              className={'mx-auto mb-4 block size-2 animate-pulse rounded-full bg-mint shadow-[0_0_18px_#70E1B1]'}
-            />
-            <p className={'text-sm font-medium text-white'}>
-              {hasTimedOut ? 'The live Widget is taking longer than expected.' : 'Loading the live Widget'}
-            </p>
-            {hasTimedOut ? (
-              <a
-                href={'https://widget.shapeshift.com/'}
-                target={'_blank'}
-                rel={'noreferrer'}
-                className={'mt-3 inline-flex text-sm text-blueLight hover:text-white'}
-              >
-                {'Open the Widget directly →'}
-              </a>
-            ) : null}
+      <div
+        aria-hidden={isReady}
+        className={'absolute inset-0 z-10 overflow-hidden bg-[#0A0A14] transition-opacity duration-300'}
+        style={{ opacity: isReady ? 0 : 1, pointerEvents: isReady ? 'none' : 'auto' }}
+      >
+        <div
+          className={'h-[590px] w-[420px] bg-[#0A0A14]'}
+          style={{ transform: `scale(${scale})`, transformOrigin: 'top left' }}
+        >
+          <div className={'flex h-[74px] items-center justify-between border-b border-white/10 px-5'}>
+            <div className={'text-base font-semibold text-white'}>{'Swap'}</div>
+            <div className={'flex items-center gap-4'}>
+              <span className={'rounded-xl border border-white/10 px-4 py-2.5 text-xs font-semibold text-white'}>
+                {'Connect'}
+              </span>
+              <IconSettings className={'size-5 text-gray-500'} />
+            </div>
           </div>
+          <div className={'px-4 pt-4'}>
+            <div className={'h-[136px] rounded-[22px] border border-white/10 bg-[#12121C] p-4'}>
+              <div className={'text-xs text-gray-500'}>{'Sell'}</div>
+              <div className={'mt-3 flex items-center justify-between'}>
+                <span className={'text-2xl font-semibold text-white'}>{'0'}</span>
+                <span className={'flex items-center gap-3 rounded-xl bg-[#080811] px-4 py-3'}>
+                  <Image src={'/widget/eth_icon.png'} alt={''} width={28} height={28} />
+                  <span>
+                    <strong className={'block text-sm text-white'}>{'ETH'}</strong>
+                    <span className={'text-[11px] text-gray-500'}>{'Ethereum'}</span>
+                  </span>
+                </span>
+              </div>
+              <div className={'mt-2 text-xs text-gray-600'}>{'$0.00'}</div>
+            </div>
+            <div className={'mt-[18px] h-[136px] rounded-[22px] border border-white/10 bg-[#12121C] p-4'}>
+              <div className={'text-xs text-gray-500'}>{'Buy'}</div>
+              <div className={'mt-3 flex items-center justify-between'}>
+                <span className={'text-2xl font-semibold text-white'}>{'0'}</span>
+                <span className={'flex items-center gap-3 rounded-xl bg-[#080811] px-4 py-3'}>
+                  <Image src={'/widget/usdc_icon.png'} alt={''} width={28} height={28} />
+                  <span>
+                    <strong className={'block text-sm text-white'}>{'USDC'}</strong>
+                    <span className={'text-[11px] text-gray-500'}>{'Ethereum'}</span>
+                  </span>
+                </span>
+              </div>
+              <div className={'mt-2 text-xs text-gray-600'}>{'$0.00'}</div>
+            </div>
+            <button
+              type={'button'}
+              tabIndex={-1}
+              className={'mt-4 h-[50px] w-full rounded-xl bg-blue font-semibold text-white'}
+            >
+              {'Connect Wallet'}
+            </button>
+          </div>
+          <div
+            className={
+              'mt-4 flex h-[54px] items-center justify-center gap-1.5 border-t border-white/10 text-[11px] text-gray-600'
+            }
+          >
+            <span>{'Powered by'}</span>
+            <IconFox className={'size-3 text-blue'} />
+            <span className={'font-semibold text-blue'}>{'ShapeShift'}</span>
+          </div>
+          {hasTimedOut ? (
+            <a
+              href={'https://widget.shapeshift.com/'}
+              target={'_blank'}
+              rel={'noreferrer'}
+              className={'text-center text-xs text-blueLight hover:text-white'}
+            >
+              {'Open the Widget directly →'}
+            </a>
+          ) : null}
         </div>
-      ) : null}
+      </div>
     </div>
   )
 }
@@ -179,6 +244,7 @@ export function DevelopersHero(): ReactNode {
             className={'pointer-events-none absolute inset-[7%] opacity-40 blur-[64px] transition-colors duration-1000'}
             style={{
               background: `linear-gradient(135deg, ${palette[paletteIndex]}aa, #9D63EC77 48%, #70E1B166)`,
+              borderRadius: '42% 58% 61% 39% / 46% 38% 62% 54%',
             }}
           />
           <RealWidgetEmbed />
