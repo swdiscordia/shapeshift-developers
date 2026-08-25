@@ -37,7 +37,7 @@ function LivePreview({ preset }: { preset: TPreset }): ReactNode {
         style={{ backgroundColor: preset.accent }}
       />
       <div
-        className={'w-full max-w-[320px] rounded-2xl border p-5 shadow-2xl transition-colors duration-500 ease-out'}
+        className={'w-full max-w-[380px] rounded-2xl border p-5 shadow-2xl transition-colors duration-500 ease-out'}
         style={{ backgroundColor: preset.background, borderColor: `${preset.accent}40` }}
       >
         <div className={'mb-4 flex items-center justify-between'}>
@@ -120,12 +120,12 @@ function LiveThemeSwitcher(): ReactNode {
 
   return (
     <div className={'flex flex-col items-center gap-7'}>
-      <div className={'relative flex aspect-square w-full max-w-[520px] items-center justify-center'}>
+      <div className={'relative flex aspect-square w-full max-w-[460px] items-center justify-center'}>
         <motion.div
           aria-hidden={'true'}
           animate={shouldReduceMotion ? undefined : { rotate: 360 }}
           transition={shouldReduceMotion ? undefined : { duration: 18, repeat: Infinity, ease: 'linear' }}
-          className={'pointer-events-none absolute inset-[2%] rounded-full opacity-90 blur-[2px]'}
+          className={'pointer-events-none absolute inset-[3%] rounded-full opacity-90 blur-[2px]'}
           style={{
             background:
               'conic-gradient(from 15deg, #3861fb, #06b6d4, #10b981, #bea989, #f97316, #f43f5e, #a855f7, #3861fb)',
@@ -134,7 +134,7 @@ function LiveThemeSwitcher(): ReactNode {
         <div
           aria-hidden={'true'}
           className={
-            'pointer-events-none absolute inset-[10%] rounded-full bg-[#0a0b11] shadow-[inset_0_0_70px_rgba(255,255,255,.04)]'
+            'pointer-events-none absolute inset-[12%] rounded-full bg-[#0a0b11] shadow-[inset_0_0_70px_rgba(255,255,255,.04)]'
           }
         />
         <div
@@ -144,7 +144,7 @@ function LiveThemeSwitcher(): ReactNode {
           }
           style={{ backgroundColor: preset.accent }}
         />
-        <div className={'relative z-10 w-[76%] max-w-[320px]'}>
+        <div className={'relative z-10 w-[86%] max-w-[380px]'}>
           <LivePreview preset={preset} />
         </div>
       </div>
