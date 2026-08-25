@@ -218,24 +218,6 @@ export function DevelopersApiSection(): ReactNode {
               hasArrow
               className={'w-full sm:w-fit'}
             />
-            <div className={'mt-6 flex flex-wrap gap-x-6 gap-y-3 text-sm'}>
-              <a
-                href={'https://github.com/shapeshift'}
-                target={'_blank'}
-                rel={'noreferrer'}
-                className={'text-gray-500 transition-colors hover:text-white'}
-              >
-                {'GitHub ↗'}
-              </a>
-              <a
-                href={'https://discord.gg/shapeshift'}
-                target={'_blank'}
-                rel={'noreferrer'}
-                className={'text-gray-500 transition-colors hover:text-white'}
-              >
-                {'Integration support ↗'}
-              </a>
-            </div>
           </div>
         </div>
 

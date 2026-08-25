@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
+import { animate, motion, useMotionTemplate, useMotionValue, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
@@ -10,29 +10,40 @@ import { IconSettings } from '@/app/[lang]/_icons/IconSettings'
 
 import type { ReactNode } from 'react'
 
-// The real widget.shapeshift.com card, measured directly against the live page: its own
-// nav/title block is 188px tall, and the Swap card is 420x507 empty/disconnected, growing to
-// ~580px once a wallet is connected (balance lines, a receive-address row) — WIDGET_CARD_HEIGHT
-// has headroom for that so real connected-state content doesn't get cropped off.
+// The real widget.shapeshift.com card, measured directly against the live page's own DOM
+// (the .ssw-widget node) across every real state, not just the default one:
+//   - disconnected: 420x507 — what effectively every fresh visitor sees
+//   - a wallet already connected (extra "Receive address" row): ~571
+//   - an amount entered with a live quote showing (route, fee, Swap button): ~680
+// A single static crop height can't fit all three without either wasting ~170px of space in
+// the default state or clipping the actual swap flow — so this isn't static. It starts at the
+// COMPACT height (zero dead space for the common case), then grows once to the EXPANDED height
+// the moment the visitor actually interacts with the widget, detected via the standard
+// cross-origin trick of watching focus move into the iframe (window blurs and
+// document.activeElement becomes the iframe element) — no content-reading required, and no
+// false positives from switching browser tabs/apps, which don't hand focus to this iframe.
 //
-// The iframe's own `height` attribute matters beyond sizing: the widget's wallet-connect modal
-// is `position: fixed` sized to the iframe's OWN internal viewport, not to the cropped window we
-// display. An oversized iframe height (e.g. a big flat safety margin) makes that modal render
-// far below our visible crop, appearing cut off when a user actually connects. Keeping the
-// iframe's height equal to exactly what we crop to (WIDGET_CROP_TOP + WIDGET_CARD_HEIGHT) keeps
-// the modal's centered content inside the visible window — verified directly against the live
-// widget with a real wallet-connect click.
+// The iframe's own `height` ATTRIBUTE is kept permanently fixed at the expanded size, never
+// re-set based on state — only the OUTER wrapper's CSS height (a plain overflow-hidden clip)
+// changes. Verified directly that doing it the other way round breaks real interaction: resizing
+// the iframe's height attribute forces a real viewport resize inside the widget's own document,
+// and if that happens on the same tick as a click (e.g. opening the wallet-connect modal), the
+// modal never opens at all — this two-height split avoids ever touching the iframe's internal
+// viewport after its first render.
 const WIDGET_CARD_WIDTH = 420
-const WIDGET_CARD_HEIGHT = 590
+const WIDGET_COMPACT_HEIGHT = 507
+const WIDGET_EXPANDED_HEIGHT = 740
 const WIDGET_CROP_TOP = 188
-const WIDGET_IFRAME_HEIGHT = WIDGET_CROP_TOP + WIDGET_CARD_HEIGHT
+const WIDGET_IFRAME_HEIGHT = WIDGET_CROP_TOP + WIDGET_EXPANDED_HEIGHT
 
 function RealWidgetEmbed(): ReactNode {
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const readyTimerRef = useRef<number | undefined>(undefined)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   const [scale, setScale] = useState(1)
   const [isReady, setIsReady] = useState(false)
-  const [hasTimedOut, setHasTimedOut] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  const cardHeight = isExpanded ? WIDGET_EXPANDED_HEIGHT : WIDGET_COMPACT_HEIGHT
 
   useEffect(() => {
     const el = wrapperRef.current
@@ -45,11 +56,42 @@ function RealWidgetEmbed(): ReactNode {
     return () => observer.disconnect()
   }, [])
 
+  // The iframe's own `load` event is not reliable here: if the browser resolves it before
+  // React finishes attaching the handler (e.g. an instant cache hit), the event fires and is
+  // simply never seen, leaving isReady stuck false forever — the real widget underneath is
+  // fine, but permanently hidden behind this non-interactive loading placeholder. A flat timer
+  // started on mount guarantees the swap to the real iframe happens regardless of whether
+  // `load` was actually observed.
   useEffect(() => {
-    const timeout = window.setTimeout(() => setHasTimedOut(true), 8000)
+    const fallback = window.setTimeout(() => setIsReady(true), 2600)
+    return () => window.clearTimeout(fallback)
+  }, [])
+
+  // Focus alone isn't enough of a signal: an iframe sits in the normal tab order, so a keyboard
+  // user tabbing through the page (never intending to touch the widget at all) lands on it too,
+  // and would trigger the same window-blur — expanding the card to a mostly-empty 740px box for
+  // someone who never asked for it (verified: 15 plain Tab presses, no click, reproduced exactly
+  // that). A click that starts INSIDE the iframe never fires a pointerdown our outer page can see
+  // at all (it's a separate document), so the tell isn't "did we see a pointer press" — it's "did
+  // we see a keydown on OUR OWN page immediately before losing focus". Tab-driven focus transfer
+  // always follows a keydown on the outer document (the previously-focused element was out here);
+  // a genuine click into the iframe never does.
+  useEffect(() => {
+    let lastKeyDownAt = 0
+
+    function handleKeyDown(): void {
+      lastKeyDownAt = Date.now()
+    }
+    function handleWindowBlur(): void {
+      const wasTabDriven = Date.now() - lastKeyDownAt < 100
+      if (!wasTabDriven && document.activeElement === iframeRef.current) setIsExpanded(true)
+    }
+
+    window.addEventListener('keydown', handleKeyDown, true)
+    window.addEventListener('blur', handleWindowBlur)
     return () => {
-      window.clearTimeout(timeout)
-      if (readyTimerRef.current) window.clearTimeout(readyTimerRef.current)
+      window.removeEventListener('keydown', handleKeyDown, true)
+      window.removeEventListener('blur', handleWindowBlur)
     }
   }, [])
 
@@ -57,20 +99,23 @@ function RealWidgetEmbed(): ReactNode {
     <div
       ref={wrapperRef}
       className={
-        'relative z-20 w-full max-w-[420px] overflow-hidden rounded-[28px] border border-white/10 bg-[#0A0A14] shadow-[0_35px_100px_rgba(0,0,0,.62)]'
+        'relative z-20 w-full max-w-[420px] overflow-hidden rounded-[28px] border border-white/10 bg-[#0A0A14] shadow-[0_35px_100px_rgba(0,0,0,.62)] transition-[height] duration-300 ease-out'
       }
-      style={{ aspectRatio: `${WIDGET_CARD_WIDTH} / ${WIDGET_CARD_HEIGHT}` }}
+      style={{ height: scale * cardHeight }}
     >
       <iframe
+        ref={iframeRef}
         src={'https://widget.shapeshift.com/'}
         title={'ShapeShift Widget'}
         width={WIDGET_CARD_WIDTH}
         height={WIDGET_IFRAME_HEIGHT}
         allow={'clipboard-write'}
         loading={'eager'}
-        onLoad={() => {
-          readyTimerRef.current = window.setTimeout(() => setIsReady(true), 1800)
-        }}
+        // This is meant to read as a fixed, cropped snapshot of the widget (the whole scale +
+        // translateY illusion below depends on that), not a scrollable panel — without this,
+        // the iframe's own document can scroll internally on wheel/touch, which both breaks
+        // that illusion and can trap the page's own scroll while the cursor is over it.
+        scrolling={'no'}
         className={'transition-opacity duration-300'}
         style={{
           border: 0,
@@ -85,7 +130,7 @@ function RealWidgetEmbed(): ReactNode {
         style={{ opacity: isReady ? 0 : 1, pointerEvents: isReady ? 'none' : 'auto' }}
       >
         <div
-          className={'h-[590px] w-[420px] bg-[#0A0A14]'}
+          className={'h-[507px] w-[420px] bg-[#0A0A14]'}
           style={{ transform: `scale(${scale})`, transformOrigin: 'top left' }}
         >
           <div className={'flex h-[74px] items-center justify-between border-b border-white/10 px-5'}>
@@ -98,7 +143,7 @@ function RealWidgetEmbed(): ReactNode {
             </div>
           </div>
           <div className={'px-4 pt-4'}>
-            <div className={'h-[136px] rounded-[22px] border border-white/10 bg-[#12121C] p-4'}>
+            <div className={'h-[128px] rounded-[22px] border border-white/10 bg-[#12121C] p-4'}>
               <div className={'text-xs text-gray-500'}>{'Sell'}</div>
               <div className={'mt-3 flex items-center justify-between'}>
                 <span className={'text-2xl font-semibold text-white'}>{'0'}</span>
@@ -112,7 +157,7 @@ function RealWidgetEmbed(): ReactNode {
               </div>
               <div className={'mt-2 text-xs text-gray-600'}>{'$0.00'}</div>
             </div>
-            <div className={'mt-[18px] h-[136px] rounded-[22px] border border-white/10 bg-[#12121C] p-4'}>
+            <div className={'mt-[18px] h-[128px] rounded-[22px] border border-white/10 bg-[#12121C] p-4'}>
               <div className={'text-xs text-gray-500'}>{'Buy'}</div>
               <div className={'mt-3 flex items-center justify-between'}>
                 <span className={'text-2xl font-semibold text-white'}>{'0'}</span>
@@ -143,32 +188,54 @@ function RealWidgetEmbed(): ReactNode {
             <IconFox className={'size-3 text-blue'} />
             <span className={'font-semibold text-blue'}>{'ShapeShift'}</span>
           </div>
-          {hasTimedOut ? (
-            <a
-              href={'https://widget.shapeshift.com/'}
-              target={'_blank'}
-              rel={'noreferrer'}
-              className={'text-center text-xs text-blueLight hover:text-white'}
-            >
-              {'Open the Widget directly →'}
-            </a>
-          ) : null}
         </div>
       </div>
     </div>
   )
 }
 
+// Alpha baked directly into each stop (as an 8-digit hex) rather than appended afterwards:
+// animate() interpolates colors as rgba() internally, so concatenating a literal 'aa' suffix
+// onto its output produces something like 'rgba(56, 111, 249, 1)aa' — invalid CSS that the
+// browser silently drops, which is why the glow previously looked frozen instead of fading.
+const PALETTE = ['#386FF9aa', '#9D63ECaa', '#70E1B1aa', '#06B6D4aa']
+
 export function DevelopersHero(): ReactNode {
   const shouldReduceMotion = useReducedMotion()
-  const palette = ['#386FF9', '#9D63EC', '#70E1B1', '#06B6D4']
-  const [paletteIndex, setPaletteIndex] = useState(0)
+  const glowRef = useRef<HTMLDivElement>(null)
+  // A single motion value smoothly tweened through the palette (closing the loop back to the
+  // first color) so the glow's hue drifts continuously — the previous version snapped the
+  // `background` gradient string straight from one color to the next every few seconds, which
+  // a CSS `transition-colors` can't smooth (it doesn't cover the `background` shorthand), so it
+  // looked like a hard cut instead of a fade.
+  const glowAccent = useMotionValue(PALETTE[0])
 
   useEffect(() => {
     if (shouldReduceMotion) return undefined
-    const interval = window.setInterval(() => setPaletteIndex((index) => (index + 1) % palette.length), 3200)
-    return () => window.clearInterval(interval)
-  }, [shouldReduceMotion, palette.length])
+    const controls = animate(glowAccent, [...PALETTE, PALETTE[0]], {
+      duration: PALETTE.length * 3.2,
+      repeat: Infinity,
+      ease: 'linear',
+    })
+
+    // Pauses the color loop once the hero scrolls out of view instead of tweening forever in
+    // the background for as long as the tab stays open.
+    const el = glowRef.current
+    const observer = el
+      ? new IntersectionObserver(([entry]) => {
+          if (entry?.isIntersecting) controls.play()
+          else controls.pause()
+        })
+      : null
+    if (el && observer) observer.observe(el)
+
+    return () => {
+      controls.stop()
+      observer?.disconnect()
+    }
+  }, [shouldReduceMotion, glowAccent])
+
+  const glowBackground = useMotionTemplate`linear-gradient(135deg, ${glowAccent}, #9D63EC77 48%, #70E1B166)`
 
   return (
     <section className={'relative overflow-hidden pb-16 pt-5 lg:pb-20 lg:pt-4'}>
@@ -224,6 +291,7 @@ export function DevelopersHero(): ReactNode {
           }
         >
           <motion.div
+            ref={glowRef}
             aria-hidden={'true'}
             initial={false}
             animate={
@@ -241,9 +309,9 @@ export function DevelopersHero(): ReactNode {
                   }
             }
             transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-            className={'pointer-events-none absolute inset-[7%] opacity-40 blur-[64px] transition-colors duration-1000'}
+            className={'pointer-events-none absolute inset-[7%] opacity-40 blur-[64px]'}
             style={{
-              background: `linear-gradient(135deg, ${palette[paletteIndex]}aa, #9D63EC77 48%, #70E1B166)`,
+              background: glowBackground,
               borderRadius: '42% 58% 61% 39% / 46% 38% 62% 54%',
             }}
           />

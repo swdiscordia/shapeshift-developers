@@ -22,11 +22,9 @@ export function Button(props: TButtonProps): ReactNode {
       {props.href ? (
         <LocalizedLink
           className={cl(
-            'flex h-14 px-5 py-4 text-sm font-semibold items-center text-white justify-center rounded-xl hover:-translate-y-0.5 transition-all duration-300 gap-2',
+            'flex h-14 px-5 py-4 font-medium items-center text-white backdrop-blur-lg justify-center rounded-2xl hover:scale-105 transition-all duration-300 gap-2',
             hasArrow ? 'justify-between min-w-[232px]' : '!min-w-[152px]',
-            variant === 'blue'
-              ? 'bg-blue shadow-[0_12px_32px_rgba(56,111,249,.2)] hover:bg-blueHover'
-              : 'bg-white !text-[#080B10] shadow-[0_12px_32px_rgba(0,0,0,.16)] hover:bg-[#EEF2FF]',
+            variant === 'blue' ? 'bg-blue hover:bg-blueHover' : 'bg-white/10 border border-white/50 hover:bg-white/5',
             props.className
           )}
           href={props.href}
@@ -39,12 +37,10 @@ export function Button(props: TButtonProps): ReactNode {
         <button
           {...rest}
           className={cl(
-            'flex h-14 px-5 py-4 text-sm font-semibold items-center text-white justify-center rounded-xl hover:-translate-y-0.5 transition-all duration-300 gap-2',
+            'flex h-14 px-5 py-4 font-medium items-center text-white backdrop-blur-lg justify-center rounded-2xl hover:scale-105 transition-all duration-300 gap-2',
             props.className,
             props.href || hasArrow ? 'justify-between min-w-[232px]' : '!min-w-[152px]',
-            variant === 'blue'
-              ? 'bg-blue shadow-[0_12px_32px_rgba(56,111,249,.2)] hover:bg-blueHover'
-              : 'bg-white !text-[#080B10] shadow-[0_12px_32px_rgba(0,0,0,.16)] hover:bg-[#EEF2FF]'
+            variant === 'blue' ? 'bg-blue hover:bg-blueHover' : 'bg-white/10 border border-white/50 hover:bg-white/5'
           )}
           onClick={props.onClick}
         >

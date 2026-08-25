@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { AnimateChangeInHeight } from '@/app/[lang]/_components/AnimatedHeight'
 import { Button } from '@/app/[lang]/_components/Button'
@@ -35,15 +35,6 @@ export function DesktopHeader({ className, switchLanguageAction, currentLanguage
   const pathname = usePathname()
   const variant = pathname === '/' ? 'transparent' : 'default'
   const [currentTab, setCurrentTab] = useState<string>('')
-  const [isScrolled, setIsScrolled] = useState<boolean>(false)
-
-  useEffect(() => {
-    const updateHeader = (): void => setIsScrolled(window.scrollY > 48)
-
-    updateHeader()
-    window.addEventListener('scroll', updateHeader, { passive: true })
-    return () => window.removeEventListener('scroll', updateHeader)
-  }, [])
 
   /**
    * Map of tab content components keyed by tab value
@@ -64,28 +55,22 @@ export function DesktopHeader({ className, switchLanguageAction, currentLanguage
    * Determine background style based on variant and active tab
    */
   const getVariant = (): string => {
-    if (currentTab) return 'bg-[#111522]/95 shadow-2xl'
-    if (isScrolled) return 'bg-[#151B2A]/72 shadow-[0_16px_45px_rgba(0,0,0,.22)]'
     if (variant === 'transparent') {
+      if (currentTab) {
+        return 'bg-headerBg'
+      }
       return 'bg-transparent'
     }
-    return 'bg-[#0B0F17]/72'
+    return 'bg-headerBg'
   }
 
   return (
     <div className={'sticky top-0 z-50 hidden rounded-2xl lg:block'}>
       <Notification />
-      <div
-        onMouseLeave={() => setCurrentTab('')}
-        className={cl(
-          'roudnded-2xl relative w-full bg-transparent transition-all duration-300',
-          isScrolled ? 'mt-1' : 'mt-3'
-        )}
-      >
+      <div onMouseLeave={() => setCurrentTab('')} className={'roudnded-2xl relative mt-3 w-full bg-transparent'}>
         <div
           className={cl(
-            'flex flex-col border border-transparent items-center transition-all backdrop-blur-2xl duration-300 justify-between px-6',
-            isScrolled ? 'py-1.5' : 'py-3',
+            'flex flex-col border border-white/5 items-center transition-all backdrop-blur-lg duration-300 justify-between px-6 py-3',
             currentTab ? 'rounded-t-lg' : 'rounded-lg',
             getVariant(),
             className
@@ -102,7 +87,7 @@ export function DesktopHeader({ className, switchLanguageAction, currentLanguage
                   key={tab.name}
                   onMouseEnter={() => setCurrentTab(tab.value)}
                   className={cl(
-                    'cursor-pointer p-4 text-[12px] font-semibold uppercase tracking-[0.09em] transition-colors',
+                    'cursor-pointer p-4 text-sm font-medium transition-colors',
                     currentTab && currentTab !== tab.value ? 'text-gray-500' : 'text-white'
                   )}
                 >
@@ -114,19 +99,13 @@ export function DesktopHeader({ className, switchLanguageAction, currentLanguage
             <div className={'flex gap-2'}>
               <button
                 onMouseEnter={() => setCurrentTab('language')}
-                className={cl(
-                  'group flex aspect-square items-center justify-center border border-white/5 transition-all duration-300',
-                  isScrolled ? 'h-11 rounded-2xl' : 'h-14 rounded-[20px]'
-                )}
+                className={
+                  'group flex aspect-square h-14 items-center justify-center rounded-[20px] border border-white/5'
+                }
               >
                 <IconPlanet className={'opacity-50 transition-opacity group-hover:opacity-100'} />
               </button>
-              <Button
-                variant={'blue'}
-                title={'Launch App'}
-                href={dAppUrl}
-                className={'text-[12px] !font-semibold uppercase tracking-[0.09em]'}
-              />
+              <Button variant={'blue'} title={'Launch App'} href={dAppUrl} />
             </div>
           </div>
         </div>
