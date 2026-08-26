@@ -56,9 +56,14 @@ export function Notification(): ReactNode {
           signal: abortController.signal,
         })
 
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`)
+        // The CMS is optional in local and preview environments. Missing credentials should not
+        // surface as a runtime error in the site UI; it simply means there is no notification.
+        if (res.status === 401 || res.status === 403 || res.status === 404) {
+          setNotification(null)
+          return
         }
+
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
 
         const data = await res.json()
         if (data?.data) {

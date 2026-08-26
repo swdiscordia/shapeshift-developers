@@ -6,14 +6,10 @@ export const DEVELOPERS_DICT = {
     ctaButton: 'View API Docs',
   },
   page: {
-    partnerLogos: {
-      label: 'Routing across 18 protocols',
-    },
     widget: {
-      eyebrow: 'The widget',
-      title: 'A complete swap experience, ready to embed',
+      title: 'Your brand. Your Widget.',
       description:
-        'Configure the ShapeShift Widget to match your product, choose the default assets, and ship multichain swaps without building the interface or routing logic.',
+        'Choose a theme, set the default assets, and preview a swap experience that feels built into your product.',
       features: [
         {
           tag: '48+ chains',
@@ -36,25 +32,22 @@ export const DEVELOPERS_DICT = {
       ],
       steps: [
         {
-          number: '01',
           title: 'Get your affiliate code',
           description: 'Connect to the Partner Portal and register your code.',
         },
         {
-          number: '02',
           title: 'Configure in the sandbox',
           description: 'Theme, default assets, affiliate code. The sandbox generates the embed.',
         },
-        { number: '03', title: 'Add the embed', description: 'Swaps run and fees settle to your address.' },
+        { title: 'Add the embed', description: 'Swaps run and fees settle to your address.' },
       ],
       cardLabel: 'Shipping it',
       ctaButton: 'Open the widget sandbox',
     },
     api: {
-      eyebrow: 'The API',
       title: 'Skip the UI and build your own',
       description:
-        'The same routing engine behind the widget, exposed as a REST API. We return unsigned transactions — your users sign and broadcast them, funds never touch ShapeShift.',
+        'Use the same routing engine through a REST API. We return unsigned transactions for your users to sign and broadcast.',
       endpoints: [
         {
           method: 'GET /v1/assets',
@@ -75,25 +68,20 @@ export const DEVELOPERS_DICT = {
       ctaButton: 'View API docs',
     },
     economics: {
-      eyebrow: 'Economics',
       title: 'How the revenue share works',
-      description:
-        'One partner code follows every swap from your product to on-chain settlement. No invoice, no payout schedule.',
+      description: 'One partner code follows every swap to on-chain settlement. No invoices or payout schedules.',
       steps: [
         {
-          number: '01',
           title: 'Add your partner code',
           description: 'Create it in the partner portal, then add it once to the Widget or API.',
         },
         {
-          number: '02',
           title: 'ShapeShift routes the swap',
           description: 'Your user gets the best available route while the trade stays attributed to you.',
         },
         {
-          number: '03',
           title: 'Your fee settles on-chain',
-          description: 'Choose 0–100 bps. Your share lands directly in your wallet with every swap.',
+          description: 'Choose 0 to 100 bps. Your share lands directly in your wallet with every swap.',
         },
       ],
       banner: { label: 'See it before you integrate.', ctaButton: 'Partner portal' },
@@ -129,9 +117,9 @@ export const DEVELOPERS_DICT = {
       ],
     },
     cta: {
-      title: 'Ship multichain swaps on your project',
-      description: 'One iframe or one API. Either way, you earn on every swap.',
-      ctaPrimary: 'Start building',
+      title: 'Make swaps feel native to your product',
+      description: 'Configure the Widget, preview your theme, and take the complete flow into production.',
+      ctaPrimary: 'Configure the Widget',
       ctaSecondary: 'Talk with us',
     },
   },

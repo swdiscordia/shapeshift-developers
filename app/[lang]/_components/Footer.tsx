@@ -25,7 +25,6 @@ export function Footer(): ReactNode {
             variant={'blue'}
             title={footerButtonTitle}
             hasArrow
-            className={'relative !justify-center [&_svg]:absolute [&_svg]:right-5'}
           />
         </div>
 
@@ -56,18 +55,10 @@ export function Footer(): ReactNode {
         <div
           className={'mt-12 flex flex-col items-center justify-between gap-6 border-t border-stroke pt-8 sm:flex-row'}
         >
-          <div className={'flex items-center gap-5'}>
-            <div className={'rounded-[16px] bg-white p-2'}>
-              <Image src={'/qrcode.png'} alt={'Download the ShapeShift app'} width={92} height={92} />
-            </div>
+          <div className={'flex items-center gap-6 rounded-2xl border border-stroke bg-black/95 p-2'}>
+            <span className={'p-4 text-2xl text-white'}>{'Get the app'}</span>
             <div>
-              <div className={'mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8FACFF]'}>
-                {'ShapeShift mobile'}
-              </div>
-              <div className={'mb-1 text-xl font-semibold tracking-[-0.02em] text-white'}>{'Get the app'}</div>
-              <div className={'max-w-[170px] text-xs leading-relaxed text-gray-500'}>
-                {'Scan to trade and manage crypto on the go.'}
-              </div>
+              <Image src={'/qrcode.png'} alt={'qrcode'} width={128} height={128} />
             </div>
           </div>
           <div className={'text-sm text-gray-500'}>

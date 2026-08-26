@@ -11,7 +11,6 @@ import { IconClose } from '@/app/[lang]/_icons/IconClose'
 import { IconMenu } from '@/app/[lang]/_icons/IconMenu'
 import { IconPlanet } from '@/app/[lang]/_icons/IconPlanet'
 import { ShapeshiftLogo } from '@/app/[lang]/_icons/ShapeshiftLogo'
-import { cl } from '@/app/[lang]/_utils/cl'
 import { appDao, appDevelopers, appProducts, appResources, headerTabs } from '@/app/[lang]/_utils/constants'
 import { SUPPORTED_LANGUAGES } from '@/app/[lang]/_utils/i18nconfig'
 
@@ -69,31 +68,15 @@ export function MobileHeader({
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
   const [expandedSection, setExpandedSection] = useState<string>('')
-  const [isScrolled, setIsScrolled] = useState<boolean>(false)
 
   // Close menu when route changes
   useEffect(() => {
     setIsMenuOpen(false)
   }, [pathname])
 
-  useEffect(() => {
-    const updateHeader = (): void => setIsScrolled(window.scrollY > 32)
-
-    updateHeader()
-    window.addEventListener('scroll', updateHeader, { passive: true })
-    return () => window.removeEventListener('scroll', updateHeader)
-  }, [])
-
   return (
     <div className={'sticky top-0 z-50 lg:hidden'}>
-      <div
-        className={cl(
-          'z-50 flex w-full items-center justify-between border p-4 backdrop-blur-2xl transition-all duration-300',
-          isScrolled
-            ? 'mt-2 rounded-[22px] border-transparent bg-[#151B2A]/72 shadow-[0_14px_40px_rgba(0,0,0,.22)]'
-            : 'mt-6 rounded-2xl border-transparent bg-[#0B0F17]/72'
-        )}
-      >
+      <div className={'z-50 mt-6 flex w-full items-center justify-between rounded-2xl bg-headerBg p-4'}>
         <LocalizedLink href={'/'} aria-label={'ShapeShift'}>
           <ShapeshiftLogo />
         </LocalizedLink>

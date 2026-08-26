@@ -3,9 +3,9 @@ import { DevelopersCta } from './_components/DevelopersCta'
 import { DevelopersEconomicsSection } from './_components/DevelopersEconomicsSection'
 import { DevelopersFaq } from './_components/DevelopersFaq'
 import { DevelopersHero } from './_components/DevelopersHero'
+import { DevelopersLaunchPath } from './_components/DevelopersLaunchPath'
 import { DevelopersPartnerLogos } from './_components/DevelopersPartnerLogos'
 import { DevelopersStats } from './_components/DevelopersStats'
-import { DevelopersUseCases } from './_components/DevelopersUseCases'
 import { DevelopersWhyShapeShift } from './_components/DevelopersWhyShapeShift'
 import { DevelopersWidgetSection } from './_components/DevelopersWidgetSection'
 
@@ -17,12 +17,12 @@ export default function DevelopersPage(): ReactNode {
       <DevelopersHero />
       <DevelopersStats />
       <DevelopersPartnerLogos />
-      <DevelopersWhyShapeShift />
-      <DevelopersUseCases />
       <DevelopersWidgetSection />
+      <DevelopersWhyShapeShift />
       <DevelopersApiSection />
       <DevelopersEconomicsSection />
-      <div className={'pt-20 lg:pt-24'}>
+      <DevelopersLaunchPath />
+      <div className={'pt-12 lg:pt-14'}>
         <DevelopersFaq />
       </div>
       <DevelopersCta />
