@@ -167,7 +167,7 @@ export function DevelopersApiSection(): ReactNode {
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <section id={'api'} className={'container scroll-mt-28 pt-14 lg:scroll-mt-32 lg:pt-16'}>
+    <section id={'api'} className={'container mx-auto scroll-mt-28 pt-14 lg:scroll-mt-32 lg:pt-16'}>
       <h2 className={'mb-4 text-[38px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[50px]'}>{api.title}</h2>
       <p className={'mb-8 max-w-[640px] text-base leading-relaxed text-secondary sm:text-lg'}>{api.description}</p>
 
@@ -216,7 +216,7 @@ export function DevelopersApiSection(): ReactNode {
               variant={'white'}
               title={'Open the API reference'}
               hasArrow
-              className={'w-full sm:w-fit'}
+              className={'w-full whitespace-nowrap sm:w-fit'}
             />
           </div>
         </div>

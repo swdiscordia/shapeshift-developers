@@ -59,7 +59,7 @@ export function DevelopersFaq(): ReactNode {
   const { items } = DEVELOPERS_DICT.page.faq
 
   return (
-    <div className={'container grid gap-6 lg:grid-cols-[.65fr_1.35fr] lg:gap-16'}>
+    <div className={'container mx-auto grid gap-6 lg:grid-cols-[.65fr_1.35fr] lg:gap-16'}>
       <div>
         <h2 className={'max-w-[360px] text-[34px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[42px]'}>
           {DEVELOPERS_DICT.page.faq.title}

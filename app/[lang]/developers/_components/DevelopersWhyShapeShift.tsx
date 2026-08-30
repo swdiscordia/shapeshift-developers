@@ -23,7 +23,7 @@ function RouterIllustration(): ReactNode {
 
         <div
           className={
-            'my-3 h-6 w-px bg-gradient-to-b from-blue to-blue/40 sm:my-0 sm:h-px sm:w-auto sm:flex-1 sm:self-center sm:bg-gradient-to-r'
+            'my-3 h-6 w-px self-center bg-gradient-to-b from-blue to-blue/40 sm:my-0 sm:h-px sm:w-auto sm:flex-1 sm:bg-gradient-to-r'
           }
         />
 
@@ -38,7 +38,7 @@ function RouterIllustration(): ReactNode {
 
         <div
           className={
-            'my-3 h-6 w-px bg-gradient-to-b from-blue/40 to-mint sm:my-0 sm:h-px sm:w-auto sm:flex-1 sm:self-center sm:bg-gradient-to-r'
+            'my-3 h-6 w-px self-center bg-gradient-to-b from-blue/40 to-mint sm:my-0 sm:h-px sm:w-auto sm:flex-1 sm:bg-gradient-to-r'
           }
         />
 
@@ -57,7 +57,7 @@ function RouterIllustration(): ReactNode {
 
 export function DevelopersWhyShapeShift(): ReactNode {
   return (
-    <section className={'container pt-16 lg:pt-20'}>
+    <section className={'container mx-auto pt-16 lg:pt-20'}>
       <div className={'mb-8 max-w-[720px]'}>
         <h2 className={'mb-6 text-[42px] font-bold leading-[1.03] tracking-[-0.04em] sm:text-[56px]'}>
           {'One request in. The best route out.'}

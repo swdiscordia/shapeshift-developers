@@ -6,7 +6,7 @@ export function DevelopersStats(): ReactNode {
   const stats = Object.values(DEVELOPERS_DICT.page.stats)
 
   return (
-    <div className={'container border-y border-white/10'}>
+    <div className={'container mx-auto border-y border-white/10'}>
       <div className={'grid w-full grid-cols-1 sm:grid-cols-3'}>
         {stats.map((stat) => (
           <div

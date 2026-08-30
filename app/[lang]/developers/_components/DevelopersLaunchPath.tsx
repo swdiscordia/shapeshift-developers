@@ -22,7 +22,7 @@ const integrationAnswers = [
 
 export function DevelopersLaunchPath(): ReactNode {
   return (
-    <section className={'container pt-12 lg:pt-14'}>
+    <section className={'container mx-auto pt-12 lg:pt-14'}>
       <div className={'border-y border-white/10 py-8 lg:py-9'}>
         <div className={'flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between'}>
           <div>

@@ -9,7 +9,7 @@ export function DevelopersCta(): ReactNode {
   const { cta } = DEVELOPERS_DICT.page
 
   return (
-    <section className={'container pb-14 pt-12 lg:pb-16 lg:pt-14'}>
+    <section className={'container mx-auto pb-14 pt-12 lg:pb-16 lg:pt-14'}>
       <div
         className={
           'relative isolate min-h-[300px] overflow-hidden rounded-[20px] border border-stroke p-8 text-center sm:p-10 lg:min-h-[340px] lg:p-12'
@@ -46,13 +46,7 @@ export function DevelopersCta(): ReactNode {
           </h2>
           <p className={'mb-8 text-lg text-white'}>{cta.description}</p>
           <div className={'flex flex-wrap items-center justify-center gap-3.5'}>
-            <Button
-              href={'https://widget.shapeshift.com/'}
-              variant={'blue'}
-              title={cta.ctaPrimary}
-              hasArrow
-              className={'relative !justify-center [&_svg]:absolute [&_svg]:right-5'}
-            />
+            <Button href={'https://widget.shapeshift.com/'} variant={'blue'} title={cta.ctaPrimary} hasArrow />
             <Button href={'https://discord.gg/shapeshift'} variant={'white'} title={cta.ctaSecondary} />
           </div>
         </div>
