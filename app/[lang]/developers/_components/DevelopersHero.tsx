@@ -1,161 +1,123 @@
 'use client'
 
+import '@shapeshiftoss/swap-widget/style.css'
 import { animate, motion, useMotionTemplate, useMotionValue, useReducedMotion } from 'framer-motion'
-import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '@/app/[lang]/_components/Button'
-import { IconFox } from '@/app/[lang]/_icons/IconFox'
-import { IconSettings } from '@/app/[lang]/_icons/IconSettings'
 
-import type { ReactNode } from 'react'
+import type { MouseEvent, ReactNode } from 'react'
 
-// The public widget includes its configurator above the swap card. The fixed viewport keeps the
-// product itself visible in the hero while preserving the real, interactive implementation.
-const WIDGET_CARD_WIDTH = 420
-const WIDGET_COMPACT_HEIGHT = 507
-const WIDGET_EXPANDED_HEIGHT = 740
-const WIDGET_CROP_TOP = 188
-const WIDGET_IFRAME_HEIGHT = WIDGET_CROP_TOP + WIDGET_EXPANDED_HEIGHT
+// Loaded client-side only: the widget reads window/localStorage at module init (Reown AppKit) and
+// has no meaningful server-rendered output.
+const SwapWidget = dynamic(async () => (await import('@shapeshiftoss/swap-widget')).SwapWidget, {
+  ssr: false,
+  loading: () => <div className={'h-[571px] w-[420px] max-w-full rounded-[20px] bg-[#0A0A14]'} />,
+})
 
-function RealWidgetEmbed(): ReactNode {
-  const wrapperRef = useRef<HTMLDivElement>(null)
-  const iframeRef = useRef<HTMLIFrameElement>(null)
+// The widget's own CSS pins it to exactly 420px wide with no responsive breakpoint of its own, so
+// below that width it would otherwise get silently clipped by the hero's overflow-hidden section.
+const WIDGET_NATIVE_WIDTH = 420
+
+// TODO(shapeshift-business): remove this guard once a real walletConnectProjectId (below) is set.
+// `showConnectButton={false}` only hides the widget's header Connect shortcut — its primary
+// swap-form button independently doubles as "Connect Wallet" whenever no wallet is connected, and
+// clicking it still opens the full Reown AppKit modal (email/Google/X/Discord/GitHub sign-in,
+// WalletConnect QR), none of which can complete against a placeholder project ID. Redirecting that
+// click to the real widget instead of silently swallowing it keeps the button honest — this embed
+// stays a look-and-feel preview (asset/chain selection, amounts, and the rest of the swap form stay
+// fully interactive) without leaving visitors clicking a "Connect Wallet" button that does nothing.
+function blockPlaceholderConnectClick(event: MouseEvent<HTMLDivElement>): void {
+  const actionButton = (event.target as HTMLElement).closest('.ssw-action-btn')
+  if (actionButton?.textContent?.trim() !== 'Connect Wallet') return
+  event.preventDefault()
+  event.stopPropagation()
+  window.open('https://widget.shapeshift.com/', '_blank', 'noopener,noreferrer')
+}
+
+function SwapWidgetEmbed(): ReactNode {
+  return (
+    <div onClickCapture={blockPlaceholderConnectClick}>
+      {/*
+        Upstream bug in @shapeshiftoss/swap-widget's own ≤600px CSS: .ssw-modal only sets a
+        max-height there, so its flex children (chain sidebar + token list) have no definite space
+        to distribute — the virtualized token list resolves to 0px tall and renders zero rows.
+        Giving the modal a real height (still capped well under the viewport) fixes the flex
+        cascade without changing anything about its layout/content.
+      */}
+      <style>{'@media (max-width: 600px) { .ssw-modal { height: min(600px, 90vh) !important; } }'}</style>
+      <SwapWidget
+        // TODO(shapeshift-business): this is a placeholder Reown Cloud project ID pending a real
+        // one from the business side. It's enough for the widget to initialize AppKit and render
+        // the full asset/chain-selection UI and swap form. Once a real ID is issued: set it here,
+        // remove `showConnectButton={false}`, and remove the click guard above.
+        walletConnectProjectId={'00000000000000000000000000000000'}
+        showConnectButton={false}
+        // TODO(shapeshift-business): `partnerCode` intentionally left unset. It requires a real
+        // code registered through ShapeShift's own affiliate program (see docs/affiliates.md in
+        // shapeshift/web), the same category of external, business-side setup as the
+        // walletConnectProjectId above. Without it, swaps through this embed aren't attributed to
+        // any affiliate account — acceptable for now since this is a look-and-feel preview on
+        // ShapeShift's own site, not a third-party partner integration. Set it here if that changes.
+      />
+    </div>
+  )
+}
+
+// The widget has no responsive behavior of its own (fixed 420px width, see WIDGET_NATIVE_WIDTH), so
+// below that width this scales the whole thing down to fit instead of letting it get clipped.
+// ResizeObserver reports an element's pre-transform layout size, so measuring the inner (scaled)
+// wrapper directly still gives its true native height — no separate unscaled probe element needed.
+function ScaledSwapWidget(): ReactNode {
+  const outerRef = useRef<HTMLDivElement>(null)
+  const innerRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
-  const [isReady, setIsReady] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
-
-  const cardHeight = isExpanded ? WIDGET_EXPANDED_HEIGHT : WIDGET_COMPACT_HEIGHT
+  const [nativeHeight, setNativeHeight] = useState(571)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    const el = wrapperRef.current
-    if (!el) return undefined
-    const observer = new ResizeObserver(() => {
-      const width = el.getBoundingClientRect().width
-      setScale(Math.min(1, width / WIDGET_CARD_WIDTH))
+    const outerEl = outerRef.current
+    const innerEl = innerRef.current
+    if (!outerEl || !innerEl) return undefined
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === outerEl) setScale(Math.min(1, entry.contentRect.width / WIDGET_NATIVE_WIDTH))
+        else if (entry.target === innerEl) setNativeHeight(entry.contentRect.height)
+      }
     })
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
+    resizeObserver.observe(outerEl)
+    resizeObserver.observe(innerEl)
 
-  useEffect(() => {
-    const fallback = window.setTimeout(() => setIsReady(true), 1200)
-    return () => window.clearTimeout(fallback)
-  }, [])
+    // A CSS transform on an ancestor makes it the containing block for `position: fixed`
+    // descendants, which breaks the "Select Token" modal's full-viewport backdrop and collapses its
+    // virtualized token list to zero height once this wrapper is actually scaled down (mobile). The
+    // widget already has its own native responsive layout for the modal below a 600px viewport, so
+    // rather than fight that, the transform is simply lifted while the modal is open — the resting
+    // card (which has no responsive behavior of its own) is the only thing that needs scaling.
+    const mutationObserver = new MutationObserver(() => {
+      setIsModalOpen(!!innerEl.querySelector('.ssw-modal-backdrop'))
+    })
+    mutationObserver.observe(innerEl, { childList: true, subtree: true })
 
-  useEffect(() => {
-    let lastKeyDownAt = 0
-
-    function handleKeyDown(): void {
-      lastKeyDownAt = Date.now()
-    }
-    function handleWindowBlur(): void {
-      const wasTabDriven = Date.now() - lastKeyDownAt < 100
-      if (!wasTabDriven && document.activeElement === iframeRef.current) setIsExpanded(true)
-    }
-
-    window.addEventListener('keydown', handleKeyDown, true)
-    window.addEventListener('blur', handleWindowBlur)
     return () => {
-      window.removeEventListener('keydown', handleKeyDown, true)
-      window.removeEventListener('blur', handleWindowBlur)
+      resizeObserver.disconnect()
+      mutationObserver.disconnect()
     }
   }, [])
 
   return (
-    <div
-      ref={wrapperRef}
-      className={
-        'relative z-20 w-full max-w-[420px] overflow-hidden rounded-[28px] border border-white/10 bg-[#0A0A14] shadow-[0_35px_100px_rgba(0,0,0,.62)] transition-[height] duration-300 ease-out'
-      }
-      style={{ height: scale * cardHeight }}
-    >
-      <iframe
-        ref={iframeRef}
-        src={'https://widget.shapeshift.com/'}
-        title={'ShapeShift Widget'}
-        width={WIDGET_CARD_WIDTH}
-        height={WIDGET_IFRAME_HEIGHT}
-        allow={'clipboard-write'}
-        loading={'eager'}
-        onLoad={() => setIsReady(true)}
-        scrolling={'no'}
-        className={'transition-opacity duration-300'}
+    <div ref={outerRef} className={'w-full max-w-[420px]'} style={{ height: scale * nativeHeight }}>
+      <div
+        ref={innerRef}
         style={{
-          border: 0,
-          opacity: isReady ? 1 : 0,
-          transform: `scale(${scale}) translateY(${-WIDGET_CROP_TOP}px)`,
+          width: WIDGET_NATIVE_WIDTH,
+          transform: isModalOpen ? 'none' : `scale(${scale})`,
           transformOrigin: 'top left',
         }}
-      />
-      <div
-        aria-hidden={isReady}
-        className={'absolute inset-0 z-10 overflow-hidden bg-[#0A0A14] transition-opacity duration-300'}
-        style={{
-          opacity: isReady ? 0 : 1,
-          pointerEvents: isReady ? 'none' : 'auto',
-        }}
       >
-        <div
-          className={'h-[507px] w-[420px] bg-[#0A0A14]'}
-          style={{ transform: `scale(${scale})`, transformOrigin: 'top left' }}
-        >
-          <div className={'flex h-[74px] items-center justify-between border-b border-white/10 px-5'}>
-            <div className={'text-base font-semibold text-white'}>{'Swap'}</div>
-            <div className={'flex items-center gap-4'}>
-              <span className={'rounded-xl border border-white/10 px-4 py-2.5 text-xs font-semibold text-white'}>
-                {'Connect'}
-              </span>
-              <IconSettings className={'size-5 text-gray-500'} />
-            </div>
-          </div>
-          <div className={'px-4 pt-4'}>
-            <div className={'h-[128px] rounded-[22px] border border-white/10 bg-[#12121C] p-4'}>
-              <div className={'text-xs text-gray-500'}>{'Sell'}</div>
-              <div className={'mt-3 flex items-center justify-between'}>
-                <span className={'text-2xl font-semibold text-white'}>{'0'}</span>
-                <span className={'flex items-center gap-3 rounded-xl bg-[#080811] px-4 py-3'}>
-                  <Image src={'/widget/eth_icon.png'} alt={''} width={28} height={28} />
-                  <span>
-                    <strong className={'block text-sm text-white'}>{'ETH'}</strong>
-                    <span className={'text-[11px] text-gray-500'}>{'Ethereum'}</span>
-                  </span>
-                </span>
-              </div>
-              <div className={'mt-2 text-xs text-gray-600'}>{'$0.00'}</div>
-            </div>
-            <div className={'mt-[18px] h-[128px] rounded-[22px] border border-white/10 bg-[#12121C] p-4'}>
-              <div className={'text-xs text-gray-500'}>{'Buy'}</div>
-              <div className={'mt-3 flex items-center justify-between'}>
-                <span className={'text-2xl font-semibold text-white'}>{'0'}</span>
-                <span className={'flex items-center gap-3 rounded-xl bg-[#080811] px-4 py-3'}>
-                  <Image src={'/widget/usdc_icon.png'} alt={''} width={41} height={40} className={'size-7'} />
-                  <span>
-                    <strong className={'block text-sm text-white'}>{'USDC'}</strong>
-                    <span className={'text-[11px] text-gray-500'}>{'Ethereum'}</span>
-                  </span>
-                </span>
-              </div>
-              <div className={'mt-2 text-xs text-gray-600'}>{'$0.00'}</div>
-            </div>
-            <button
-              type={'button'}
-              tabIndex={-1}
-              className={'mt-4 h-[50px] w-full rounded-xl bg-blue font-semibold text-white'}
-            >
-              {'Connect Wallet'}
-            </button>
-          </div>
-          <div
-            className={
-              'mt-4 flex h-[54px] items-center justify-center gap-1.5 border-t border-white/10 text-[11px] text-gray-600'
-            }
-          >
-            <span>{'Powered by'}</span>
-            <IconFox className={'size-3 text-blue'} />
-            <span className={'font-semibold text-blue'}>{'ShapeShift'}</span>
-          </div>
-        </div>
+        <SwapWidgetEmbed />
       </div>
     </div>
   )
@@ -195,7 +157,9 @@ export function DevelopersHero(): ReactNode {
 
   return (
     <section className={'relative overflow-hidden pb-16 pt-5 lg:pb-20 lg:pt-4'}>
-      <div className={'container relative grid min-w-0 items-center gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12'}>
+      <div
+        className={'container relative mx-auto grid min-w-0 items-center gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12'}
+      >
         <motion.div initial={false} className={'min-w-0 lg:pt-4'}>
           <h1
             className={
@@ -269,7 +233,7 @@ export function DevelopersHero(): ReactNode {
               borderRadius: '42% 58% 61% 39% / 46% 38% 62% 54%',
             }}
           />
-          <RealWidgetEmbed />
+          <ScaledSwapWidget />
         </motion.div>
       </div>
     </section>
