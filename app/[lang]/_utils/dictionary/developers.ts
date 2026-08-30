@@ -117,8 +117,8 @@ export const DEVELOPERS_DICT = {
       ],
     },
     cta: {
-      title: 'Make swaps feel native to your product',
-      description: 'Configure the Widget, preview your theme, and take the complete flow into production.',
+      title: 'Integrate multichain swaps in your product',
+      description: 'Configure the Widget, preview your theme, create a partner code, and start earning on every swap.',
       ctaPrimary: 'Configure the Widget',
       ctaSecondary: 'Talk with us',
     },

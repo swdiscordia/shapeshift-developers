@@ -169,9 +169,7 @@ export function DevelopersHero(): ReactNode {
             {'Every chain your users need, in one place.'}
           </h1>
           <p className={'mb-7 max-w-[600px] text-lg leading-relaxed text-secondary sm:text-xl'}>
-            {
-              'Configure the Widget in minutes, then launch after your wallet flow, supported assets, and QA are production-ready. ShapeShift handles the routing infrastructure.'
-            }
+            {'Embed the Widget or call the API. ShapeShift handles the routing across every chain you need.'}
           </p>
           <div className={'mb-8 flex flex-col gap-3 sm:flex-row'}>
             <Button href={'https://widget.shapeshift.com/'} variant={'blue'} title={'Try the Widget'} hasArrow />

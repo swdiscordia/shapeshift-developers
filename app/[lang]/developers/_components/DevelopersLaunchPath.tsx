@@ -16,7 +16,7 @@ const integrationAnswers = [
   {
     question: 'How do partner earnings work?',
     answer:
-      'Create a partner code in the Portal, add it to the Widget or API, and monitor attributed swaps there. Fees settle directly to your configured wallet on-chain—there is no balance to withdraw.',
+      'Create a partner code in the Portal, add it to the Widget or API, and monitor attributed swaps there. Fees settle directly to your configured wallet on-chain. There is no balance to withdraw.',
   },
 ] as const
 

@@ -23,7 +23,7 @@ export function DevelopersStats(): ReactNode {
         ))}
       </div>
       <div className={'border-t border-white/[0.07] py-2.5 text-center text-xs leading-relaxed text-gray-600'}>
-        {'Figures supplied by ShapeShift; network coverage evolves as routes are added. '}
+        {'These figures are a snapshot and are not updated automatically. '}
         <a
           href={'https://api.shapeshift.com/docs'}
           target={'_blank'}
