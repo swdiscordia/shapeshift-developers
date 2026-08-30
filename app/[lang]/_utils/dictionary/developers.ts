@@ -7,7 +7,7 @@ export const DEVELOPERS_DICT = {
   },
   page: {
     widget: {
-      title: 'Your brand. Your Widget.',
+      title: 'Your brand. Make it feel native.',
       description:
         'Choose a theme, set the default assets, and preview a swap experience that feels built into your product.',
       features: [
