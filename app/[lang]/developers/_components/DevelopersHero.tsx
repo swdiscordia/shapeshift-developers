@@ -166,8 +166,7 @@ export function DevelopersHero(): ReactNode {
               'mb-6 max-w-full text-[46px] font-bold leading-[.98] tracking-[-0.05em] sm:text-[60px] lg:text-[68px]'
             }
           >
-            {'Preview multichain swaps in minutes. '}
-            <span>{'Ship on your timeline.'}</span>
+            {'Every chain your users need, in one place.'}
           </h1>
           <p className={'mb-7 max-w-[600px] text-lg leading-relaxed text-secondary sm:text-xl'}>
             {
