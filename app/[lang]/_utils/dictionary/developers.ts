@@ -72,7 +72,7 @@ export const DEVELOPERS_DICT = {
       description: 'One partner code follows every swap to on-chain settlement. No invoices or payout schedules.',
       steps: [
         {
-          title: 'Add your partner code',
+          title: 'Create your partner code',
           description: 'Create it in the partner portal, then add it once to the Widget or API.',
         },
         {

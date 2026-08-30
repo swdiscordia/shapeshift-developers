@@ -7,7 +7,7 @@ const milestones = [
   {
     icon: '</>',
     label: 'Your product',
-    title: 'Add your partner code',
+    title: 'Create your partner code',
     description: 'One parameter in the Widget or API.',
   },
   {
@@ -50,7 +50,7 @@ export function DevelopersEconomicsSection(): ReactNode {
   const { economics } = DEVELOPERS_DICT.page
 
   return (
-    <section id={'economics'} className={'container pt-14 lg:pt-16'}>
+    <section id={'economics'} className={'container mx-auto pt-14 lg:pt-16'}>
       <div className={'mx-auto mb-8 max-w-[780px] text-center'}>
         <h2 className={'mb-4 text-[38px] font-bold leading-[1.04] tracking-[-0.035em] sm:text-[50px]'}>
           {economics.title}
@@ -117,16 +117,15 @@ export function DevelopersEconomicsSection(): ReactNode {
               </div>
               <div>
                 <dt className={'text-[11px] uppercase tracking-[.08em] text-gray-500'}>{'Fee setting'}</dt>
-                <dd className={'mt-1.5 text-sm font-semibold text-white'}>{'25 bps'}</dd>
+                <dd className={'mt-1.5 text-sm font-semibold text-white'}>{'Your fee'}</dd>
               </div>
               <div>
                 <dt className={'text-[11px] uppercase tracking-[.08em] text-gray-500'}>{'Settlement'}</dt>
                 <dd className={'mt-1.5 text-sm font-semibold text-white'}>{'On-chain'}</dd>
               </div>
             </dl>
-            <div className={'flex items-center justify-between border-t border-white/10 pt-4 text-xs'}>
+            <div className={'border-t border-white/10 pt-4 text-xs'}>
               <span className={'text-gray-500'}>{'Monitor attributed swaps and fee history'}</span>
-              <span className={'font-medium text-white'}>{'View activity →'}</span>
             </div>
           </div>
         </div>
