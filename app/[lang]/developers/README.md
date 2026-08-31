@@ -4,32 +4,32 @@ This directory contains the `/developers` landing page: the entry point for dApp
 
 ## Directory Structure
 
-- **layout.tsx**: Metadata (title/description/OG/Twitter) for the page.
+- **layout.tsx**: Metadata (title/description/OG/Twitter) for the page, plus `DevelopersResourceHints` (DNS prefetch/preconnect for `widget.shapeshift.com`).
 - **page.tsx**: Assembles all sections below in order.
-- **_components/**: One component per page section, plus `SectionEyebrow.tsx` (the shared label above every H2).
+- **_components/**: One component per page section.
 
 ## Page sections, in order
 
-1. **Hero** — interactive swap-preview mock, primary CTAs (Try the Widget / Talk to partnerships).
-2. **Stats** — chains / assets / lifetime volume.
+1. **Hero** — the real, live `@shapeshiftoss/swap-widget` embedded in the page (not a mock), plus the primary CTAs (Try the Widget / Talk with us).
+2. **Stats** — chains / assets / lifetime volume (static snapshot figures, not live).
 3. **Partner logos** — scrolling row of protocols ShapeShift routes across.
-4. **Why ShapeShift** — the routing pitch: compare protocols, return one best route.
-5. **Use cases** — three audiences (wallets & apps, chains & protocols, partners) and what each gets.
-6. **Widget** — feature list + live theme studio preview.
-7. **API** — clickable endpoint list with a live-switching code sample panel (`'use client'`).
-8. **Economics** — how the affiliate revenue share works, step by step.
-9. **FAQ** — accordion (reuses `QuestionSection`).
+4. **Widget** — feature copy + an interactive live theme-color preview (`LiveThemeSwitcher`).
+5. **Why ShapeShift** — the routing pitch: compare protocols, return one best route.
+6. **API** — clickable endpoint list with a live-switching, typewriter-animated code sample panel.
+7. **Economics** — how the affiliate revenue share works, step by step.
+8. **Launch path** — the three questions most teams ask before choosing an integration path.
+9. **FAQ** — accordion.
 10. **Closing CTA** band.
 
 ## Technical Implementation
 
-- All copy lives in `app/[lang]/_utils/dictionary/developers.ts` under `DEVELOPERS_DICT.page`, **except** WhyShapeShift and UseCases, which hardcode their copy directly in JSX (illustration-heavy sections where copy and visuals are tightly coupled).
-- Reuses existing shared components (`Button`, `LocalizedLink`, `QuestionSection`, `SectionEyebrow`) and Tailwind color tokens from `tailwind.config.ts` — no new dependencies.
-- Only `DevelopersApiSection.tsx` and `DevelopersWidgetSection.tsx` are client components (interactive state); everything else is a server component.
+- Most copy lives in `app/[lang]/_utils/dictionary/developers.ts` under `DEVELOPERS_DICT.page`, **except** WhyShapeShift, WidgetSection's feature ring, ApiSection's code panels, EconomicsSection's milestones, and LaunchPath's Q&A, which hardcode their copy directly in JSX (illustration- or interaction-heavy sections where copy, visuals, and behavior are tightly coupled).
+- `DevelopersHero.tsx` embeds the real `@shapeshiftoss/swap-widget` React SDK (dynamically imported, `ssr: false`) with a placeholder `walletConnectProjectId` — see the `TODO(shapeshift-business)` comments in that file for what's needed to go from preview to a fully working wallet connection.
+- Client components (interactive state, refs, or the widget's own client-only requirements): `DevelopersHero`, `DevelopersWidgetSection`, `DevelopersApiSection`, `DevelopersFaq`, `DevelopersPartnerLogos`, `DevelopersResourceHints`. Everything else is a server component.
+- Reuses existing shared components (`Button`, `LocalizedLink`) and Tailwind color tokens from `tailwind.config.ts`.
 
 ## Development Guidelines
 
 - Keep all partner/API links pointed at real, live URLs (`https://api.shapeshift.com/docs`, `https://widget.shapeshift.com/`) — never placeholder `#` hrefs.
 - Match existing Tailwind color tokens (`bg-blue`, `bg-blueLight`, `bg-mint`, `bg-secondBg`, `border-stroke`, etc.) rather than introducing new hex values.
-- Use `SectionEyebrow` for the small uppercase label above section headings instead of hand-rolling a new variant.
-- This page is independent of the official `shapeshift/website-frontend` repo — no upstream PR is planned for this work.
+- The `@shapeshiftoss/swap-widget` SDK and its peer dependencies (`wagmi`, `@reown/appkit*`, `@solana/wallet-adapter-*`, etc.) are the only dependency this page adds to the repo. `next.config.ts`'s `webpack` block and `middleware.ts`'s CSP scoping (to `/developers` only) exist solely to support it — see the comments in both files before changing either.
