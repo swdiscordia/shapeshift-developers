@@ -180,9 +180,14 @@ export function middleware(request: NextRequest): NextResponse {
   // of every other route's policy rather than widened globally.
   const developersFontSrc = isDevelopersPath(pathname) ? ' https://fonts.reown.com' : ''
   const developersConnectSrc = isDevelopersPath(pathname)
-    ? ' https://app.shapeshift.com https://api.proxy.shapeshift.com https://api.coingecko.com https://api.web3modal.org https://cca-lite.coinbase.com'
+    ? ' https://api.shapeshift.com https://app.shapeshift.com https://api.proxy.shapeshift.com https://api.coingecko.com https://api.web3modal.org https://cca-lite.coinbase.com'
     : ''
-  const cspHeader = `default-src 'self'; ${scriptPolicy}; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.weglot.com; font-src 'self' https://fonts.gstatic.com${developersFontSrc}; img-src 'self' data: https: blob:; media-src 'self' https:; connect-src 'self' https://api.hypelab.com https://app.chatwoot.com https://widget.chatwoot.com ${strapiHostname} https://cdn.weglot.com https://api.weglot.com https://cdn-api-weglot.com wss://app.chatwoot.com  https://api.thorchain.shapeshift.com${developersConnectSrc}; frame-src 'self' https://widget.chatwoot.com https://app.chatwoot.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://app.chatwoot.com; frame-ancestors 'self'; upgrade-insecure-requests;`
+  // Coinbase Wallet SDK / Base Account SDK (pulled in transitively by the swap widget's wagmi
+  // connectors) inject their own inline bootstrap <script> tags, which our own nonce doesn't cover.
+  // 'strict-dynamic' lets scripts loaded by an already-nonce-trusted script (the widget bundle
+  // itself) delegate that trust onward, without weakening script-src for any other route.
+  const developersScriptSrc = isDevelopersPath(pathname) ? " 'strict-dynamic'" : ''
+  const cspHeader = `default-src 'self'; ${scriptPolicy}${developersScriptSrc}; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.weglot.com; font-src 'self' https://fonts.gstatic.com${developersFontSrc}; img-src 'self' data: https: blob:; media-src 'self' https:; connect-src 'self' https://api.hypelab.com https://app.chatwoot.com https://widget.chatwoot.com ${strapiHostname} https://cdn.weglot.com https://api.weglot.com https://cdn-api-weglot.com wss://app.chatwoot.com  https://api.thorchain.shapeshift.com${developersConnectSrc}; frame-src 'self' https://widget.chatwoot.com https://app.chatwoot.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://app.chatwoot.com; frame-ancestors 'self'; upgrade-insecure-requests;`
   response.headers.set('Content-Security-Policy', cspHeader)
 
   // Handle locale routing
